@@ -1,0 +1,26 @@
+server:
+  port: 8888
+  tomcat:
+    max-threads: 1000
+    max-connections: 10000
+    accept-count: 100
+
+
+spring:
+  application:
+    name: zhikou
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    jpa:
+      hibernate:
+        ddl-auto: none
+        show-sql: true
+    jackson:
+      date-format: yyyy-MM-dd HH:mm:ss
+      time-zone: UTC
+  output:
+    ansi:
+      enabled: detect
