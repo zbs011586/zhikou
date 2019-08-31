@@ -107,12 +107,8 @@ public class AccountController extends ApiBaseAction{
         resultObj.put("token", token);
         resultObj.put("userInfo", userInfo);
         resultObj.put("userId", user.getUserId());
+        log.info(userInfo.getNickName()+"登录成功");
         return ResponseEntity.ok(HttpResponse.OK("登录成功！"));
     }
 
-    @PostMapping("/test")
-    public Object testContr(){
-        Integer userId = this.getUserId();
-        return userId;
-    }
 }
