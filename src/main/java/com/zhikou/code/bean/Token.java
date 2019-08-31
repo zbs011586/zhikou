@@ -13,7 +13,7 @@ import java.util.Date;
 
 
 /**
- * @description
+ * @description 用户token表
  * @author 张宝帅
  * @date 2019/8/25 21:32
  */
@@ -21,14 +21,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "token")
-public class Token implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Table(name = "t_token")
+public class Token{
 
     //用户ID
     @Id
     @Column(name = "user_id")
-    private Long userId;
+    private Integer userId;
     //token
     @Column(name = "token")
     private String token;

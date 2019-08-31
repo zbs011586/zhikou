@@ -6,11 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 登录用户信息
- *
- * @author lipengjun
- * @email 939961241@qq.com
- * @date 2017-03-23 20:39
+ * @description 自定义注解 登录用户信息
+ * @author 张宝帅
+ * @date 2019/9/1 0:12
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

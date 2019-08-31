@@ -4,11 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Date;
 
 
@@ -17,13 +13,18 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
-public class UserVo implements Serializable {
-    private static final long serialVersionUID = 1L;
+@Table(name = "t_user")
+/**
+ * @description 用户表
+ * @author 张宝帅
+ * @date 2019/9/1 0:08
+ */
+public class User {
 
     @Id
-    @Column(name = "id")
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Integer userId;
     //会员名称
     @Column(name = "username")
     private String username;
@@ -45,10 +46,10 @@ public class UserVo implements Serializable {
     //最后登录Ip
     @Column(name = "last_login_ip")
     private String last_login_ip;
-    //会员等级
-    @Column(name = "user_level_id")
-    private Integer user_level_id;
-    //别名
+    //用户角色 0=普通用户 1=商家
+    @Column(name = "user_role")
+    private Integer user_role;
+    //昵称
     @Column(name = "nickname")
     private String nickname;
     //手机号码

@@ -1,7 +1,7 @@
 package com.zhikou.code.service;
 
 import com.zhikou.code.bean.Token;
-import com.zhikou.code.dao.ApiTokenDao;
+import com.zhikou.code.dao.TokenDao;
 import com.zhikou.code.utils.CharUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,11 @@ import java.util.Map;
 @Service
 public class TokenService {
     @Autowired
-    private ApiTokenDao tokenDao;
+    private TokenDao tokenDao;
     //12小时后过期
     private final static int EXPIRE = 3600 * 12;
 
-    public Token queryByUserId(Long userId) {
+    public Token queryByUserId(Integer userId) {
         return tokenDao.queryByUserId(userId);
     }
 
@@ -34,7 +34,7 @@ public class TokenService {
         tokenDao.saveAndFlush(token);
     }
 
-    public Map<String, Object> createToken(long userId) {
+    public Map<String, Object> createToken(Integer userId) {
         //生成一个token
         String token = CharUtil.getRandomString(32);
         //当前时间

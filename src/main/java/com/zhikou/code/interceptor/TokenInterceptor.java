@@ -1,41 +1,41 @@
 package com.zhikou.code.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zhikou.code.annotation.IgnoreAuth;
 import com.zhikou.code.bean.Token;
+import com.zhikou.code.commons.Constants;
 import com.zhikou.code.service.TokenService;
-import com.zhikou.code.utils.ApiRRException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @description 权限(Token)验证
  * @author 张宝帅
  * @date 2019/8/25 21:03
  */
-@Component
-public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
+@Slf4j
+public class TokenInterceptor extends HandlerInterceptorAdapter {
+
     @Autowired
     private TokenService tokenService;
 
-    public static final String LOGIN_USER_KEY = "LOGIN_USER_KEY";
-    public static final String LOGIN_TOKEN_KEY = "X-Nideshop-Token";
+    public static final String USER_ID = "userId";
+    public static final String TOKEN = "token";
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        //支持跨域请求
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with,X-Nideshop-Token,X-URL-PATH");
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        JSONObject res = null;
 
         IgnoreAuth annotation;
         if (handler instanceof HandlerMethod) {
@@ -50,26 +50,34 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
 
         //从header中获取token
-        String token = request.getHeader(LOGIN_TOKEN_KEY);
-        //如果header中不存在token，则从参数中获取token
-        if (StringUtils.isBlank(token)) {
-            token = request.getParameter(LOGIN_TOKEN_KEY);
-        }
+        String token = request.getHeader(TOKEN);
 
         //token为空
         if (StringUtils.isBlank(token)) {
-            throw new ApiRRException("请先登录", 401);
+            res = new JSONObject();
+            res.put("data","token为空");
+            res.put("error_code",Constants.ErrorCode.TOKEN_ERROR);
+            writerResponse(response,res);
+            return false;
         }
 
         //查询token信息
         Token tokenEntry = tokenService.queryByToken(token);
         if (tokenEntry == null || tokenEntry.getExpireTime().getTime() < System.currentTimeMillis()) {
-            throw new ApiRRException("token失效，请重新登录", 401);
+            res = new JSONObject();
+            res.put("data","token已过期");
+            res.put("error_code",Constants.ErrorCode.TOKEN_ERROR);
+            writerResponse(response,res);
+            return false;
         }
 
-        //设置userId到request里，后续根据userId，获取用户信息
-        request.setAttribute(LOGIN_USER_KEY, tokenEntry.getUserId());
-
         return true;
+    }
+
+    private void writerResponse(HttpServletResponse response,JSONObject res) throws IOException {
+        PrintWriter out = response.getWriter();
+        out.write(res.toString());
+        out.flush();
+        out.close();
     }
 }

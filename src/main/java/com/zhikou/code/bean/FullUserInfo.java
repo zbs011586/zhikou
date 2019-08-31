@@ -4,14 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FullUserInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
+/**
+ * @description 用户登录完整的信息
+ * @author 张宝帅
+ * @date 2019/9/1 0:10
+ */
+public class FullUserInfo {
 
     //errMsg
     private String errMsg;

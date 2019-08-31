@@ -1,7 +1,7 @@
 package com.zhikou.code.dao;
 
 
-import com.zhikou.code.bean.UserVo;
+import com.zhikou.code.bean.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
  * @date 2019/8/25 21:21
  */
 @Repository
-public interface UserDao extends JpaRepository<UserVo,Integer> {
+public interface UserDao extends JpaRepository<User,Integer> {
 
     @Query(value = "select * from t_user where weixin_openid=?1",nativeQuery = true)
-    UserVo queryByOpenId(String openId);
+    User queryByOpenId(String openId);
 
 }

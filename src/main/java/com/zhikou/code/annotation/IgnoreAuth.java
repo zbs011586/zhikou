@@ -3,11 +3,9 @@ package com.zhikou.code.annotation;
 import java.lang.annotation.*;
 
 /**
- * 忽略Token验证
- *
- * @author lipengjun
- * @email 939961241@qq.com
- * @date 2017-03-23 15:44
+ * @description 自定义注解 忽略token验证
+ * @author 张宝帅
+ * @date 2019/9/1 0:11
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

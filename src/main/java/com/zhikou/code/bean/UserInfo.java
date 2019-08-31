@@ -4,15 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+/**
+ * @description 登录用户的基础info信息
+ * @author 张宝帅
+ * @date 2019/9/1 2:32
+ */
+public class UserInfo {
 
     private String avatarUrl;
 
@@ -23,9 +24,5 @@ public class UserInfo implements Serializable {
     private String nickName;
 
     private String province;
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
 
 }

@@ -5,7 +5,9 @@ import com.mysql.cj.util.StringUtils;
 import com.zhikou.code.annotation.IgnoreAuth;
 import com.zhikou.code.bean.FullUserInfo;
 import com.zhikou.code.bean.UserInfo;
-import com.zhikou.code.bean.UserVo;
+import com.zhikou.code.bean.User;
+import com.zhikou.code.commons.Constants;
+import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.service.TokenService;
 import com.zhikou.code.service.UserService;
 import com.zhikou.code.utils.ApiBaseAction;
@@ -15,6 +17,7 @@ import com.zhikou.code.utils.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,13 +37,14 @@ public class AccountController extends ApiBaseAction{
     private TokenService tokenService;
 
     /**
-     * @description 微信登录
+     * @description 微信登录 参数为code和一个FullUserInfo对象
+     * FullUserInfo对象的key为userInfo 以json的形式传递
      * @author 张宝帅
      * @date 2019/8/25 21:08
      */
     @IgnoreAuth
     @PostMapping("/wx/login")
-    public Object loginByWx() {
+    public ResponseEntity loginByWx() {
         JSONObject jsonParam = this.getJsonRequest();
         FullUserInfo fullUserInfo = null;
         String code = "";
@@ -51,58 +55,64 @@ public class AccountController extends ApiBaseAction{
             fullUserInfo = jsonParam.getObject("userInfo", FullUserInfo.class);
         }
         if (null == fullUserInfo) {
-            return toResponsFail("登录失败");
+            return ResponseEntity.ok(HttpResponse.ERROR(Constants.ErrorCode.LOGIN_ERROR,"登录失败：userInfo信息不完整"));
         }
 
         Map<String, Object> resultObj = new HashMap();
 
         UserInfo userInfo = fullUserInfo.getUserInfo();
 
-        //获取openid
-        String requestUrl = ApiUserUtils.getWebAccess(code);//通过自定义工具类组合出小程序需要的登录凭证 code
-        log.info("》》》组合token为：" + requestUrl);
+        //获取配置文件中的appId和secret 通过自定义工具类组合成requestUrl请求获得openid和session_key
+        String requestUrl = ApiUserUtils.getWebAccess(code);
+        log.info("requestUrl 为：" + requestUrl);
         JSONObject sessionData = CommonUtil.httpsRequest(requestUrl, "GET", null);
 
         if (null == sessionData || StringUtils.isNullOrEmpty(sessionData.getString("openid"))) {
-            return toResponsFail("登录失败");
+            return ResponseEntity.ok(HttpResponse.ERROR(Constants.ErrorCode.LOGIN_ERROR,"登录失败：无法获取用户openid"));
         }
         //验证用户信息完整性
         String sha1 = CommonUtil.getSha1(fullUserInfo.getRawData() + sessionData.getString("session_key"));
         if (!fullUserInfo.getSignature().equals(sha1)) {
-            return toResponsFail("登录失败");
+            return ResponseEntity.ok(HttpResponse.ERROR(Constants.ErrorCode.LOGIN_ERROR,"登录失败：用户登录信息不完整"));
         }
         Date nowTime = new Date();
-        UserVo userVo = userService.queryByOpenId(sessionData.getString("openid"));
-        if (null == userVo) {
-            userVo = new UserVo();
-            userVo.setUsername("微信用户" + CharUtil.getRandomString(12));
-            userVo.setPassword(sessionData.getString("openid"));
-            userVo.setRegister_time(nowTime);
-            userVo.setRegister_ip(this.getClientIp());
-            userVo.setLast_login_ip(userVo.getRegister_ip());
-            userVo.setLast_login_time(userVo.getRegister_time());
-            userVo.setWeixin_openid(sessionData.getString("openid"));
-            userVo.setAvatar(userInfo.getAvatarUrl());
+        User user = userService.queryByOpenId(sessionData.getString("openid"));
+        if (null == user) {
+            user = new User();
+            user.setUsername("微信用户" + CharUtil.getRandomString(12));
+            user.setPassword(sessionData.getString("openid"));
+            user.setRegister_time(nowTime);
+            user.setRegister_ip(this.getClientIp());
+            user.setLast_login_ip(user.getRegister_ip());
+            user.setLast_login_time(user.getRegister_time());
+            user.setWeixin_openid(sessionData.getString("openid"));
+            user.setAvatar(userInfo.getAvatarUrl());
             //性别 0：未知、1：男、2：女
-            userVo.setGender(userInfo.getGender());
-            userVo.setNickname(userInfo.getNickName());
-            userService.save(userVo);
+            user.setGender(userInfo.getGender());
+            user.setNickname(userInfo.getNickName());
+            userService.save(user);
         } else {
-            userVo.setLast_login_ip(this.getClientIp());
-            userVo.setLast_login_time(nowTime);
-            userService.update(userVo);
+            user.setLast_login_ip(this.getClientIp());
+            user.setLast_login_time(nowTime);
+            userService.update(user);
         }
 
-        Map<String, Object> tokenMap = tokenService.createToken(userVo.getUserId());
+        Map<String, Object> tokenMap = tokenService.createToken(user.getUserId());
         String token = MapUtils.getString(tokenMap, "token");
 
         if (null == userInfo || StringUtils.isNullOrEmpty(token)) {
-            return toResponsFail("登录失败");
+            return ResponseEntity.ok(HttpResponse.ERROR(Constants.ErrorCode.LOGIN_ERROR,"登录失败：生成token异常"));
         }
 
         resultObj.put("token", token);
         resultObj.put("userInfo", userInfo);
-        resultObj.put("userId", userVo.getUserId());
-        return toResponsSuccess(resultObj);
+        resultObj.put("userId", user.getUserId());
+        return ResponseEntity.ok(HttpResponse.OK("登录成功！"));
+    }
+
+    @PostMapping("/test")
+    public Object testContr(){
+        Integer userId = this.getUserId();
+        return userId;
     }
 }
