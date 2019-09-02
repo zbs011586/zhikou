@@ -37,6 +37,8 @@ public class AccountService {
         param.setCreateTime(new Date());
         param.setUpdateTime(new Date());
         Shop shop = shopDao.save(param);
+        //修改user表中user_role状态为1
+        userDao.updateRoleStatus(param.getUserId());
         return HttpResponse.OK(shop);
     }
 }

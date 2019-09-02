@@ -10,6 +10,7 @@ import com.zhikou.code.bean.User;
 import com.zhikou.code.commons.ApiBaseAction;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
+import com.zhikou.code.dao.ShopDao;
 import com.zhikou.code.service.AccountService;
 import com.zhikou.code.service.TokenService;
 import com.zhikou.code.service.UserService;
@@ -40,6 +41,8 @@ public class AccountController extends ApiBaseAction {
     private TokenService tokenService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private ShopDao shopDao;
 
     /**
      * @description 微信登录 参数为code和一个FullUserInfo对象
@@ -100,6 +103,11 @@ public class AccountController extends ApiBaseAction {
             user.setLast_login_ip(this.getClientIp());
             user.setLast_login_time(nowTime);
             userService.update(user);
+            //判断用户是否为商家
+            if (user.getUser_role()==1){
+                Shop shop = shopDao.queryByUserId(user.getUserId());
+                resultObj.put("shop",shop);
+            }
         }
 
         Map<String, Object> tokenMap = tokenService.createToken(user.getUserId());
@@ -110,7 +118,6 @@ public class AccountController extends ApiBaseAction {
         }
 
         resultObj.put("token", token);
-        resultObj.put("userInfo", userInfo);
         resultObj.put("userId", user.getUserId());
         log.info(userInfo.getNickName()+"登录成功");
         return ResponseEntity.ok(HttpResponse.OK("登录成功！"));
