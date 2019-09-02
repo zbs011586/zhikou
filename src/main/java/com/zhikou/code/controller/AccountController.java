@@ -4,13 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.mysql.cj.util.StringUtils;
 import com.zhikou.code.annotation.IgnoreAuth;
 import com.zhikou.code.bean.FullUserInfo;
+import com.zhikou.code.bean.Shop;
 import com.zhikou.code.bean.UserInfo;
 import com.zhikou.code.bean.User;
+import com.zhikou.code.commons.ApiBaseAction;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
+import com.zhikou.code.service.AccountService;
 import com.zhikou.code.service.TokenService;
 import com.zhikou.code.service.UserService;
-import com.zhikou.code.utils.ApiBaseAction;
 import com.zhikou.code.utils.ApiUserUtils;
 import com.zhikou.code.utils.CharUtil;
 import com.zhikou.code.utils.CommonUtil;
@@ -19,6 +21,7 @@ import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,12 +32,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/account")
 @Slf4j
-public class AccountController extends ApiBaseAction{
+public class AccountController extends ApiBaseAction {
 
     @Autowired
     private UserService userService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private AccountService accountService;
 
     /**
      * @description 微信登录 参数为code和一个FullUserInfo对象
@@ -111,4 +116,24 @@ public class AccountController extends ApiBaseAction{
         return ResponseEntity.ok(HttpResponse.OK("登录成功！"));
     }
 
+    /**
+     * @description 申请成为商家
+     * @author 张宝帅
+     * @date 2019/9/2 17:36
+     */
+    @PostMapping("/shop/registry")
+    public ResponseEntity shopRegistry(@RequestBody Shop param){
+        return ResponseEntity.ok(accountService.shopRegistry(param));
+    }
+
+    /**
+     * @description 获取用户的info信息
+     * @author 张宝帅
+     * @date 2019/9/2 18:08
+     */
+    @PostMapping("/user/info")
+    public ResponseEntity getUserInfo(){
+        Integer userId = this.getUserId();
+        return ResponseEntity.ok(accountService.getUserInfo(userId));
+    }
 }

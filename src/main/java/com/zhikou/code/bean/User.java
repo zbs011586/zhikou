@@ -1,5 +1,6 @@
 package com.zhikou.code.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,9 +40,11 @@ public class User {
     private Date birthday;
     //注册时间
     @Column(name = "register_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date register_time;
     //最后登录时间
     @Column(name = "last_login_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date last_login_time;
     //最后登录Ip
     @Column(name = "last_login_ip")

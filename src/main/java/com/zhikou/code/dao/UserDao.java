@@ -17,4 +17,6 @@ public interface UserDao extends JpaRepository<User,Integer> {
     @Query(value = "select * from t_user where weixin_openid=?1",nativeQuery = true)
     User queryByOpenId(String openId);
 
+    @Query(value = "select * from t_user where user_id=?1",nativeQuery = true)
+    User queryByUserId(int userId);
 }

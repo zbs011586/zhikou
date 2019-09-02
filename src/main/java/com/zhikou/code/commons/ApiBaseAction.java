@@ -1,4 +1,4 @@
-package com.zhikou.code.utils;
+package com.zhikou.code.commons;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhikou.code.bean.Token;
