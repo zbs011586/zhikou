@@ -61,11 +61,11 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        //查询token信息
+        //查询token信息 此处不再做token的过期判断
         Token tokenEntry = tokenService.queryByToken(token);
-        if (tokenEntry == null || tokenEntry.getExpireTime().getTime() < System.currentTimeMillis()) {
+        if (tokenEntry == null /*|| tokenEntry.getExpireTime().getTime() < System.currentTimeMillis()*/) {
             res = new JSONObject();
-            res.put("data","token已过期");
+            res.put("data","token不存在");
             res.put("error_code",Constants.ErrorCode.TOKEN_ERROR);
             writerResponse(response,res);
             return false;
