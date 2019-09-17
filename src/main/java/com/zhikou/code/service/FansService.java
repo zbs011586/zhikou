@@ -24,7 +24,10 @@ public class FansService {
     private UserDao userDao;
 
     public HttpResponse isFans(int concernUserUd,int fansUserId){
-        Fans fans = fansDao.queryByConcernUserIdAndFansUserId(concernUserUd, fansUserId);
+        Fans param = new Fans();
+        param.setConcernUserId(concernUserUd);
+        param.setFansUserId(fansUserId);
+        Fans fans = fansDao.selectOne(param);
         HashMap map = new HashMap();
         //已关注status=0 未关注status=1
         if (fans == null){
@@ -55,14 +58,20 @@ public class FansService {
     }
 
     public HttpResponse saveConcern(int concernUserUd,int fansUserId){
-        Fans query = fansDao.queryByConcernUserIdAndFansUserId(concernUserUd, fansUserId);
+        Fans param = new Fans();
+        param.setConcernUserId(concernUserUd);
+        param.setFansUserId(fansUserId);
+        Fans query = fansDao.selectOne(param);
         if (query!=null){
             return HttpResponse.ERROR(Constants.ErrorCode.REQUEST_ERROR,"不能重复关注");
         }
-        User concernUser = userDao.queryByUserId(concernUserUd);
-        User fansUser = userDao.queryByUserId(fansUserId);
+        User user = new User();
+        user.setUserId(concernUserUd);
+        User concernUser = userDao.selectOne(user);
+        user.setUserId(fansUserId);
+        User fansUser = userDao.selectOne(user);
         Fans fans = new Fans(concernUserUd, concernUser.getNickname(), concernUser.getAvatar(), fansUserId, fansUser.getNickname(), fansUser.getAvatar(), new Date());
-        fansDao.save(fans);
+        fansDao.insert(fans);
         return HttpResponse.OK("关注成功");
     }
 

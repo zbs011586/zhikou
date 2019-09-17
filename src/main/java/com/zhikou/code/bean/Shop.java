@@ -11,7 +11,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity
 @Table(name = "t_shop")
 public class Shop {
 

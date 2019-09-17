@@ -5,16 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity
 @Table(name = "t_fans")
 /**
  * @description 用户的关注/粉丝 关系表
@@ -24,6 +20,7 @@ import java.util.Date;
 public class Fans {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "concern_user_id")
     private Integer concernUserId;
 

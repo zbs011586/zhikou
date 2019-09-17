@@ -105,7 +105,9 @@ public class AccountController extends ApiBaseAction {
             userService.update(user);
             //判断用户是否为商家
             if (user.getUser_role()==1){
-                Shop shop = shopDao.queryByUserId(user.getUserId());
+                Shop param = new Shop();
+                param.setUserId(user.getUserId());
+                Shop shop = shopDao.selectOne(param);
                 resultObj.put("shop",shop);
             }
         }

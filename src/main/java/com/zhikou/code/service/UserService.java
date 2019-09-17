@@ -12,15 +12,17 @@ public class UserService {
     private UserDao userDao;
 
     public User queryByOpenId(String openId) {
-        return userDao.queryByOpenId(openId);
+        User user = new User();
+        user.setWeixin_openid(openId);
+        return userDao.selectOne(user);
     }
 
     public void save(User user) {
-        userDao.save(user);
+        userDao.insert(user);
     }
 
     public void update(User user) {
-        userDao.saveAndFlush(user);
+        userDao.updateByPrimaryKey(user);
     }
 
 }

@@ -20,13 +20,17 @@ public class AccountService {
 
 
     public HttpResponse getUserInfo(int userId){
-        User user = userDao.queryByUserId(userId);
+        User user = new User();
+        user.setUserId(userId);
+        User one = userDao.selectOne(user);
         HashMap map = new HashMap();
-        if (user.getUser_role() == 0){
+        if (one.getUser_role() == 0){
             map.put("role",0);
-            map.put("info",user);
+            map.put("info",one);
         }else {
-            Shop shop = shopDao.queryByUserId(userId);
+            Shop param = new Shop();
+            param.setUserId(userId);
+            Shop shop = shopDao.selectOne(param);
             map.put("role",1);
             map.put("info",shop);
         }
@@ -36,9 +40,13 @@ public class AccountService {
     public HttpResponse shopRegistry(Shop param){
         param.setCreateTime(new Date());
         param.setUpdateTime(new Date());
-        Shop shop = shopDao.save(param);
+        shopDao.insert(param);
         //修改user表中user_role状态为1
-        userDao.updateRoleStatus(param.getUserId());
-        return HttpResponse.OK(shop);
+        User user = new User();
+        user.setUserId(param.getUserId());
+        User one = userDao.selectOne(user);
+        one.setUser_role(1);
+        userDao.updateByPrimaryKey(user);
+        return HttpResponse.OK("入住成功");
     }
 }

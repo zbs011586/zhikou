@@ -19,19 +19,23 @@ public class TokenService {
     private final static int EXPIRE = 3600 * 12;
 
     public Token queryByUserId(Integer userId) {
-        return tokenDao.queryByUserId(userId);
+        Token token = new Token();
+        token.setUserId(userId);
+        return tokenDao.selectOne(token);
     }
 
     public Token queryByToken(String token) {
-        return tokenDao.queryByToken(token);
+        Token param = new Token();
+        param.setToken(token);
+        return tokenDao.selectOne(param);
     }
 
     public void save(Token token) {
-        tokenDao.save(token);
+        tokenDao.insert(token);
     }
 
     public void update(Token token) {
-        tokenDao.saveAndFlush(token);
+        tokenDao.updateByPrimaryKey(token);
     }
 
     public Map<String, Object> createToken(Integer userId) {

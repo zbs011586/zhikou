@@ -20,7 +20,6 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "t_token")
 public class Token{
 
