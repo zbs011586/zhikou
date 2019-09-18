@@ -16,35 +16,25 @@ public class Shop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "shop_id")
     private Integer shopId;
 
-    @Column(name = "shop_name")
     private String shopName;
 
-    @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "province")
     private String province;
 
-    @Column(name = "city")
     private String city;
 
-    @Column(name = "district")
     private String district;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "description")
     private String description;
 
-    @Column(name = "create_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
-    @Column(name = "update_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
 

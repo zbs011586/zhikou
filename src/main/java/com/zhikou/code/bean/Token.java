@@ -1,5 +1,6 @@
 package com.zhikou.code.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,16 +26,14 @@ public class Token{
 
     //用户ID
     @Id
-    @Column(name = "user_id")
     private Integer userId;
     //token
-    @Column(name = "token")
     private String token;
     //过期时间
-    @Column(name = "expire_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date expireTime;
     //更新时间
-    @Column(name = "update_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
 
 }

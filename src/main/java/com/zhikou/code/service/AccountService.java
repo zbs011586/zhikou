@@ -2,6 +2,7 @@ package com.zhikou.code.service;
 
 import com.zhikou.code.bean.Shop;
 import com.zhikou.code.bean.User;
+import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.dao.ShopDao;
 import com.zhikou.code.dao.UserDao;
@@ -38,6 +39,13 @@ public class AccountService {
     }
 
     public HttpResponse shopRegistry(Shop param){
+        //判断当前用户是否已经是商家
+        Shop shop = new Shop();
+        shop.setUserId(param.getUserId());
+        Shop selectOne = shopDao.selectOne(shop);
+        if (selectOne !=null ){
+            return HttpResponse.ERROR(Constants.ErrorCode.REQUEST_ERROR,"已经是商家,不可重复入驻");
+        }
         param.setCreateTime(new Date());
         param.setUpdateTime(new Date());
         shopDao.insert(param);
@@ -47,6 +55,6 @@ public class AccountService {
         User one = userDao.selectOne(user);
         one.setUser_role(1);
         userDao.updateByPrimaryKey(user);
-        return HttpResponse.OK("入住成功");
+        return HttpResponse.OK("入驻成功");
     }
 }

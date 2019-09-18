@@ -79,7 +79,6 @@ public class ApiBaseAction {
      * @date 2019/9/1 2:03
      */
     public Integer getUserId() {
-        System.out.println(request.getHeader(TokenInterceptor.USER_ID));
         String token = request.getHeader(TokenInterceptor.TOKEN);
         //查询token信息
         Token tokenEntity = tokenService.queryByToken(token);

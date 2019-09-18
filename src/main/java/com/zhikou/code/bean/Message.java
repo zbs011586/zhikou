@@ -1,5 +1,6 @@
 package com.zhikou.code.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,27 +22,21 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "message_id")
     private Integer messageId;
 
-    @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
     private String content;
 
-    @Column(name = "rebate")
     private Integer rebate;//折扣大小
 
-    @Column(name = "file_path")
     private String filePath;//上传文件路径
 
-    @Column(name = "create_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;//创建时间
 
-    @Column(name = "start_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date startTime;//活动开始时间
 }

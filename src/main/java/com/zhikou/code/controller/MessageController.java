@@ -19,7 +19,7 @@ public class MessageController extends ApiBaseAction {
         return ResponseEntity.ok(messageService.createMessage(param,getUserId()));
     }
 
-    @GetMapping("/show")
+    @PostMapping("/show")
     public ResponseEntity showMessage(@RequestBody MessageParam param){
         return ResponseEntity.ok(messageService.showMessage(param.getPageNum(),param.getPageSize()));
     }

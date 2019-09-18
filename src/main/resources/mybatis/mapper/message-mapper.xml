@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhikou.code.dao.MessageDao">
 
-    <select id="showMessage" resultType="fans">
-        select * from t_message order by create_time desc
+    <select id="showMessage" resultType="message">
+        select message_id as messageId,user_id as userId,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
+        from t_message order by create_time desc
     </select>
 
 </mapper>

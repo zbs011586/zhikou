@@ -14,13 +14,12 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: ABCabc123!
-    jpa:
-      hibernate:
-        ddl-auto: none
-        show-sql: true
     jackson:
       date-format: yyyy-MM-dd HH:mm:ss
       time-zone: UTC
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
   output:
     ansi:
       enabled: detect

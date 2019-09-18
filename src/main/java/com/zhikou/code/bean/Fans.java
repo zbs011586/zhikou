@@ -21,25 +21,18 @@ public class Fans {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "concern_user_id")
     private Integer concernUserId;
 
-    @Column(name = "concern_nickname")
     private String concernNickname;
 
-    @Column(name = "concern_avatar")
     private String concernAvatar;
 
-    @Column(name = "fans_user_id")
     private Integer fansUserId;
 
-    @Column(name = "fans_nickname")
     private String fansNickname;
 
-    @Column(name = "fans_avatar")
     private String fansAvatar;
 
-    @Column(name = "createTime")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
