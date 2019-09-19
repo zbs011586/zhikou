@@ -26,6 +26,10 @@ public class Message {
 
     private Integer userId;
 
+    private String userName;
+
+    private String avatar;
+
     private String title;
 
     private String content;

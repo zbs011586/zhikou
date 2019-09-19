@@ -24,4 +24,9 @@ public class MessageParam {
     private int pageNum;
 
     private int pageSize;
+
+    private int messageId;
+
+    private int type;
+
 }

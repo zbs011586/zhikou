@@ -3,7 +3,7 @@
 <mapper namespace="com.zhikou.code.dao.MessageDao">
 
     <select id="showMessage" resultType="message">
-        select message_id as messageId,user_id as userId,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
+        select message_id as messageId,user_id as userId,user_name as userName,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
         from t_message order by create_time desc
     </select>
 
