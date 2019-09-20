@@ -23,6 +23,8 @@ public class UserLike {
 
     private Integer userId;
 
+    private String userName;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 

@@ -43,4 +43,8 @@ public class Message {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date startTime;//活动开始时间
+
+    @Transient
+    private int likeStatus;
+
 }

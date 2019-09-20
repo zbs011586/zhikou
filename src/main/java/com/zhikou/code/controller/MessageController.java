@@ -21,26 +21,26 @@ public class MessageController extends ApiBaseAction {
 
     @PostMapping("/show")
     public ResponseEntity showMessage(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.showMessage(param.getPageNum(),param.getPageSize()));
+        return ResponseEntity.ok(messageService.showMessage(getUserId(),param.getPageNum(),param.getPageSize()));
     }
 
-    @PostMapping("/user/like")
+    @PostMapping("/save/like")
     public ResponseEntity userLike(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.userLike(param.getMessageId(),getUserId(),param.getType()));
+        return ResponseEntity.ok(messageService.saveLike(param.getMessageId(),getUserId(),param.getType()));
     }
 
-    @PostMapping("/is/like")
-    public ResponseEntity isLike(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.isLike(param.getMessageId(),getUserId()));
-    }
-
-    @PostMapping("/user/comment")
+    @PostMapping("/save/comment")
     public ResponseEntity userComment(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.userComment(param.getMessageId(),getUserId(),param.getContent()));
+        return ResponseEntity.ok(messageService.saveComment(param.getMessageId(),getUserId(),param.getContent()));
     }
 
-    @PostMapping("/message/comment")
-    public ResponseEntity messageComment(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.messageComment(param.getMessageId(),param.getPageNum(),param.getPageSize()));
+    @PostMapping("/comment/user")
+    public ResponseEntity commentUser(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.commentUser(param.getMessageId(),param.getPageNum(),param.getPageSize()));
+    }
+
+    @PostMapping("/like/user")
+    public ResponseEntity likeUser(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.likeUser(param.getMessageId()));
     }
 }
