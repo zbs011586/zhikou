@@ -2,9 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhikou.code.dao.MessageDao">
 
-    <select id="showMessage" resultType="message">
-        select message_id as messageId,user_id as userId,user_name as userName,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
+    <select id="newMessage" resultType="message">
+        select message_id as messageId,user_id as userId,user_name as userName,avatar,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
         from t_message order by create_time desc
+    </select>
+
+    <select id="myLikeMessage" resultType="message" parameterType="INTEGER">
+        select t1.message_id as messageId,t1.user_id as userId,t1.user_name as userName,t1.avatar,t1.title,t1.content,t1.rebate,t1.file_path as filePath,t1.create_time as createTime,t1.start_time as startTime
+        from t_message t1 left join t_user_like t2
+        on t1.message_id=t2.message_id
+        where t2.user_id=#{userId}
+        order by t2.update_time desc
+    </select>
+
+    <select id="myScanMessage" resultType="message" parameterType="INTEGER">
+        select t1.message_id as messageId,t1.user_id as userId,t1.user_name as userName,t1.avatar,t1.title,t1.content,t1.rebate,t1.file_path as filePath,t1.create_time as createTime,t1.start_time as startTime
+        from t_message t1 left join t_user_scan t2
+        on t1.message_id=t2.message_id
+        where t2.user_id=#{userId}
+        order by t2.update_time desc
     </select>
 
 </mapper>

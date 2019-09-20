@@ -3,6 +3,7 @@
     <typeAliases>
 
             <typeAlias type="com.zhikou.code.bean.Message" alias="message"/>
+            <typeAlias type="com.zhikou.code.bean.UserComment" alias="comment"/>
         <typeAlias alias="Integer" type="java.lang.Integer"/>
         <typeAlias alias="Long" type="java.lang.Long"/>
         <typeAlias alias="HashMap" type="java.util.HashMap"/>

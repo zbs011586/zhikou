@@ -19,9 +19,9 @@ public class MessageController extends ApiBaseAction {
         return ResponseEntity.ok(messageService.createMessage(param,getUserId()));
     }
 
-    @PostMapping("/show")
+    @PostMapping("/new/message")
     public ResponseEntity showMessage(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.showMessage(getUserId(),param.getPageNum(),param.getPageSize()));
+        return ResponseEntity.ok(messageService.newMessage(getUserId(),param.getPageNum(),param.getPageSize()));
     }
 
     @PostMapping("/save/like")
@@ -36,11 +36,21 @@ public class MessageController extends ApiBaseAction {
 
     @PostMapping("/comment/user")
     public ResponseEntity commentUser(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.commentUser(param.getMessageId(),param.getPageNum(),param.getPageSize()));
+        return ResponseEntity.ok(messageService.commentUser(getUserId(),param.getMessageId(),param.getPageNum(),param.getPageSize()));
     }
 
     @PostMapping("/like/user")
     public ResponseEntity likeUser(@RequestBody MessageParam param){
         return ResponseEntity.ok(messageService.likeUser(param.getMessageId()));
+    }
+
+    @PostMapping("/my/like")
+    public ResponseEntity myLikes(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.myLike(getUserId(),param.getPageNum(),param.getPageSize()));
+    }
+
+    @PostMapping("/my/scan")
+    public ResponseEntity myScan(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.myScan(getUserId(),param.getPageNum(),param.getPageSize()));
     }
 }

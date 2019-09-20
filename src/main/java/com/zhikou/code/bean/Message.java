@@ -47,4 +47,9 @@ public class Message {
     @Transient
     private int likeStatus;
 
+    @Transient
+    private int shopStatus;
+
+    @Transient
+    private int warnStatus;
 }

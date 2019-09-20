@@ -6,19 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.Date;
 
 /**
- * @description 用户对消息的点赞记录表
+ * @description 用户浏览记录表
  * @author 张宝帅
- * @date 2019/9/19 21:26
+ * @date 2019/9/20 19:00
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "t_user_like")
-public class UserLike {
+@Table(name = "t_user_scan")
+public class UserScan {
 
     private Integer messageId;
 
@@ -28,4 +27,5 @@ public class UserLike {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
+
 }
