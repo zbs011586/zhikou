@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhikou.code.dao.UserWarnDao">
+    
+    <select id="myWarn" resultType="Date">
+        select warn_time
+        from t_user_warn where user_id=#{userId} and warn_time between #{startTime} and #{endTime}
+        group by warn_time
+        order by warn_time asc
+    </select>
+
+</mapper>

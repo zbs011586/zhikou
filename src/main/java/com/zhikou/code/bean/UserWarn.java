@@ -8,16 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Table;
 import java.util.Date;
 
-/**
- * @description 用户对消息的点赞记录表
- * @author 张宝帅
- * @date 2019/9/19 21:26
- */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "t_user_like")
-public class UserLike {
+@Table(name = "t_user_warn")
+public class UserWarn {
 
     private Integer messageId;
 
@@ -25,6 +20,10 @@ public class UserLike {
 
     private String userName;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date warnTime;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date updateTime;
+    private Date createTime;
+
 }

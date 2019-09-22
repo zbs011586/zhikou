@@ -53,4 +53,25 @@ public class MessageController extends ApiBaseAction {
     public ResponseEntity myScan(@RequestBody MessageParam param){
         return ResponseEntity.ok(messageService.myScan(getUserId(),param.getPageNum(),param.getPageSize()));
     }
+
+    @PostMapping("/save/warn")
+    public ResponseEntity saveWarn(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.saveWarn(getUserId(),param.getMessageId(),param.getType()));
+    }
+
+    @PostMapping("/my/warn")
+    public ResponseEntity myWarn(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.myWarn(getUserId(),param.getPageNum(),param.getPageSize()));
+    }
+
+    @PostMapping("/warn/time")
+    public ResponseEntity myWarnTime(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.myWarnTime(getUserId(),param.getStartTime(),param.getEndTime()));
+    }
+
+    @PostMapping("/warn/info")
+    public ResponseEntity warnInfo(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.warnInfo(param.getWarnTime(),getUserId()));
+    }
+
 }
