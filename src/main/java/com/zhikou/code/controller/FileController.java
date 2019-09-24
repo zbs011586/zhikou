@@ -51,7 +51,7 @@ public class FileController extends ApiBaseAction {
                     e.printStackTrace();
                 }
                 //生成图片的静态资源访问路径
-                String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
+                String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/file/image/"+getUserId()+"/"+newFileName;
                 log.info(url);
                 urls = url +",";
             }

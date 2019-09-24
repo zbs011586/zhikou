@@ -40,7 +40,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         log.info(request.getRequestURI());
         System.out.println(request.getRequestURI());
         //静态资源放行
-        if (request.getRequestURI().startsWith("/image")){
+        if (request.getRequestURI().startsWith("/file/imag")){
             System.out.println(request.getRequestURI());
             log.info(request.getRequestURI());
             return true;
