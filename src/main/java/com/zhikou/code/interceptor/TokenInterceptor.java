@@ -28,7 +28,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private TokenService tokenService;
 
-    public static final String USER_ID = "userId";
     public static final String TOKEN = "token";
 
 
@@ -37,6 +36,13 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         JSONObject res = null;
+
+        //静态资源放行
+        if (request.getRequestURI().startsWith("/image")){
+            System.out.println(request.getRequestURI());
+            log.info(request.getRequestURI());
+            return true;
+        }
 
         IgnoreAuth annotation;
         if (handler instanceof HandlerMethod) {
@@ -47,11 +53,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
 
         //如果有@IgnoreAuth注解，则不验证token
         if (annotation != null) {
-            return true;
-        }
-        //静态资源放行
-        if (request.getRequestURI().startsWith("/image")){
-            log.info(request.getRequestURI());
             return true;
         }
         //从header中获取token
