@@ -37,6 +37,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         response.setContentType("application/json; charset=utf-8");
         JSONObject res = null;
 
+        log.info(request.getRequestURI());
+        System.out.println(request.getRequestURI());
         //静态资源放行
         if (request.getRequestURI().startsWith("/image")){
             System.out.println(request.getRequestURI());
