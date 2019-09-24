@@ -93,6 +93,7 @@ public class AccountController extends ApiBaseAction {
             user.setRegister_ip(this.getClientIp());
             user.setLast_login_ip(user.getRegister_ip());
             user.setLast_login_time(user.getRegister_time());
+            user.setUser_role(0);
             user.setWeixin_openid(sessionData.getString("openid"));
             user.setAvatar(userInfo.getAvatarUrl());
             //性别 0：未知、1：男、2：女
