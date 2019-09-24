@@ -3,12 +3,14 @@ package com.zhikou.code.controller;
 import com.zhikou.code.commons.ApiBaseAction;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -18,12 +20,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/file")
+@Slf4j
 public class FileController extends ApiBaseAction {
 
     @PostMapping("/upload")
     public ResponseEntity fileUpload(HttpServletRequest request){
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = req.getFiles("file");
+        log.info(files.size()+"");
         String urls = "";
         if (files !=null && files.size()>0){
             for (MultipartFile file : files) {
@@ -48,8 +52,10 @@ public class FileController extends ApiBaseAction {
                 }
                 //生成图片的静态资源访问路径
                 String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
+                log.info(url);
                 urls = url +",";
             }
+            log.info(urls);
             HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls);
             return ResponseEntity.ok(response);
         }else {
