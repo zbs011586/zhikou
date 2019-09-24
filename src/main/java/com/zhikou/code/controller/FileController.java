@@ -13,38 +13,48 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/file")
 public class FileController extends ApiBaseAction {
 
     @PostMapping("/upload")
-    public ResponseEntity fileUpload(HttpServletRequest request) throws IOException {
+    public ResponseEntity fileUpload(HttpServletRequest request){
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
-        MultipartFile file = req.getFile("file");
-        //格式化时间戳
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        String nowTime = sdf.format(new Date().getTime());
-        String rootPath = System.getProperty("user.dir")+"/"+getUserId();
-        String rootPath2 = System.getProperty("user.dir")+"/"+getUserId()+"/"+nowTime;
-        String fileName = file.getOriginalFilename();
-        File dir = new File(rootPath);
-        if (!dir.exists()){
-            dir.mkdir();
+        List<MultipartFile> files = req.getFiles("file");
+        String urls = "";
+        if (files !=null && files.size()>0){
+            for (MultipartFile file : files) {
+                //文件后缀
+                String fileSuffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+                //rootPath为linux环境下的绝对路径+根据userId生产的文件夹
+                String rootPath = "/root/zhiko/zhikou/image/"+getUserId();
+                //用时间戳重新命名文件
+                String newFileName = new Date().getTime()+"."+fileSuffix;
+                String filePath = rootPath+"/"+newFileName;
+                File fileDir = new File(rootPath);
+                File uploadFile = new File(filePath);
+                try {
+                    if (!fileDir.exists()){
+                        fileDir.mkdirs();
+                    }
+                    if (!uploadFile.exists()){
+                        file.transferTo(uploadFile);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //生成图片的静态资源访问路径
+                String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
+                urls = url +",";
+            }
+            HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls);
+            return ResponseEntity.ok(response);
+        }else {
+            HttpResponse response = new HttpResponse(Constants.ErrorCode.REQUEST_ERROR,"文件为空,请重新上传");
+            return ResponseEntity.ok(response);
         }
-        File file1 = new File(rootPath2);
-        if (!file1.exists()){
-            file1.mkdir();
-        }
-        File uploadFile = new File(rootPath2,"/"+fileName);
-        file.transferTo(uploadFile);
-        HashMap map = new HashMap();
-        map.put("path",uploadFile.getPath());
-        System.out.println(uploadFile.getPath());
-        HttpResponse response = new HttpResponse(Constants.ErrorCode.REQUEST_ERROR, map);
-        return ResponseEntity.ok(response);
     }
 }
