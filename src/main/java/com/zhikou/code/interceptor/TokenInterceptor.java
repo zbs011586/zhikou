@@ -6,6 +6,7 @@ import com.zhikou.code.bean.Token;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.util.RequestUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -48,7 +49,11 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         if (annotation != null) {
             return true;
         }
-
+        //静态资源放行
+        if (request.getRequestURI().startsWith("/image")){
+            log.info(request.getRequestURI());
+            return true;
+        }
         //从header中获取token
         String token = request.getHeader(TOKEN);
 
