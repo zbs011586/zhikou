@@ -1,13 +1,12 @@
-package com.zhikou.code.commons;
+package com.zhikou.code.interceptor;
 
-import com.zhikou.code.interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class MvcConfig implements WebMvcConfigurer {
+public class StaticConfig implements WebMvcConfigurer {
 
 
     //配置静态资源拦截器放行
