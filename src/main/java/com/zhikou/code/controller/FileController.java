@@ -27,14 +27,13 @@ public class FileController extends ApiBaseAction {
     public ResponseEntity fileUpload(HttpServletRequest request){
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = req.getFiles("file");
-        log.info(files.size()+"");
         String urls = "";
         if (files !=null && files.size()>0){
             for (MultipartFile file : files) {
                 //文件后缀
                 String fileSuffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                 //rootPath为linux环境下的绝对路径+根据userId生产的文件夹
-                String rootPath = "/root/zhiko/zhikou/image/"+getUserId();
+                String rootPath = "/root/zhiko/zhikou/image"+"/"+getUserId();
                 //用时间戳重新命名文件
                 String newFileName = new Date().getTime()+"."+fileSuffix;
                 String filePath = rootPath+"/"+newFileName;
@@ -51,12 +50,11 @@ public class FileController extends ApiBaseAction {
                     e.printStackTrace();
                 }
                 //生成图片的静态资源访问路径
-                String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/file/image/"+getUserId()+"/"+newFileName;
+                String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
                 log.info(url);
-                urls = url +",";
+                urls += url +",";
             }
-            log.info(urls);
-            HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls);
+            HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls.substring(0,urls.length() - 1));
             return ResponseEntity.ok(response);
         }else {
             HttpResponse response = new HttpResponse(Constants.ErrorCode.REQUEST_ERROR,"文件为空,请重新上传");
