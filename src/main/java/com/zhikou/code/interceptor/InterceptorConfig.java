@@ -1,3 +1,4 @@
+/*
 package com.zhikou.code.interceptor;
 
 import org.springframework.context.annotation.Bean;
@@ -20,4 +21,5 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
         super.addInterceptors(registry);
     }
 }
+*/
 
