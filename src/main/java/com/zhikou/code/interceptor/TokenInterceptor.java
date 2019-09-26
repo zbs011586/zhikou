@@ -2,9 +2,13 @@ package com.zhikou.code.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhikou.code.annotation.IgnoreAuth;
+import com.zhikou.code.bean.Token;
 import com.zhikou.code.commons.Constants;
+import com.zhikou.code.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -19,11 +23,12 @@ import java.io.PrintWriter;
  * @date 2019/8/25 21:03
  */
 @Slf4j
+@Configuration
 public class TokenInterceptor implements HandlerInterceptor {
 
-   /* @Autowired
+   @Autowired
     private TokenService tokenService;
-*/
+
     public static final String TOKEN = "token";
 
 
@@ -58,15 +63,15 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         //交由工厂管理的拦截器 无法释放静态资源 不交由工厂管理 此处无法注入实例
         //此处随后需要优化 token不能放在库中
-       /* //查询token信息 此处不再做token的过期判断
+        //查询token信息 此处不再做token的过期判断
         Token tokenEntry = tokenService.queryByToken(token);
-        if (tokenEntry == null *//*|| tokenEntry.getExpireTime().getTime() < System.currentTimeMillis()*//*) {
+        if (tokenEntry == null) {
             res = new JSONObject();
             res.put("data","token不存在");
             res.put("error_code",Constants.ErrorCode.TOKEN_ERROR);
             writerResponse(response,res);
             return false;
-        }*/
+        }
 
         return true;
     }
