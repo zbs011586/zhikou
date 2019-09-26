@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-
 @RestController
 @RequestMapping("/message")
 public class MessageController extends ApiBaseAction {
 
-    @Resource
+
+    @Autowired
     private MessageService messageService;
 
     @PostMapping("/create")

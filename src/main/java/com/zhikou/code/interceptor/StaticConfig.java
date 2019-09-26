@@ -12,7 +12,7 @@ public class StaticConfig implements WebMvcConfigurer {
     //配置静态资源拦截器放行
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new TokenInterceptor()).excludePathPatterns("/image/**");
+        registry.addInterceptor(new TokenInterceptor()).excludePathPatterns("/image/**").addPathPatterns("/**");
     }
 
     //配置静态资源的映射

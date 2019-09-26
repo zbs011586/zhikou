@@ -6,6 +6,8 @@ import com.zhikou.code.interceptor.TokenInterceptor;
 import com.zhikou.code.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +21,7 @@ import java.io.IOException;
  * @date 2019/8/25 20:54
  */
 @Slf4j
+@Component
 public class ApiBaseAction {
     /**
      * 得到request对象
@@ -82,7 +85,7 @@ public class ApiBaseAction {
         String token = request.getHeader(TokenInterceptor.TOKEN);
         //查询token信息
         Token tokenEntity = tokenService.queryByToken(token);
-        if (tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
+        if (tokenEntity == null /*|| tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()*/) {
             return null;
         }
         return tokenEntity.getUserId();

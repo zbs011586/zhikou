@@ -4,15 +4,14 @@ server:
     max-threads: 1000
     max-connections: 10000
     accept-count: 100
-
-spring:
-  application:
-    name: zhikou
   servlet:
     multipart:
       enabled: true
       max-file-size: 20MB
       max-request-size: 200MB
+spring:
+  application:
+    name: zhikou
   datasource:
     url: jdbc:mysql://47.98.139.95:3306/zhikou?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
