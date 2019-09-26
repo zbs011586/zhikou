@@ -64,11 +64,7 @@ public class AccountService {
         param.setUpdateTime(new Date());
         shopDao.insert(param);
         //修改user表中user_role状态为1
-        User user = new User();
-        user.setUserId(param.getUserId());
-        User one = userDao.selectOne(user);
-        one.setUser_role(1);
-        userDao.updateByPrimaryKey(user);
+        userDao.updateRole(userId,1);
         return HttpResponse.OK("入驻成功");
     }
 

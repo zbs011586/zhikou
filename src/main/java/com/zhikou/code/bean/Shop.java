@@ -36,6 +36,8 @@ public class Shop {
 
     protected Double lat;
 
+    private String classify;
+
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")

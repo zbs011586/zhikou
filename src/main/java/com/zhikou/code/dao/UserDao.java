@@ -2,6 +2,7 @@ package com.zhikou.code.dao;
 
 
 import com.zhikou.code.bean.User;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -11,4 +12,5 @@ import tk.mybatis.mapper.common.Mapper;
  */
 public interface UserDao extends Mapper<User> {
 
+    void updateRole(@Param("userId") int userId,@Param("role")int role);
 }
