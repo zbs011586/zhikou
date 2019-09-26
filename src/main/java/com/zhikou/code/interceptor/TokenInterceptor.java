@@ -60,9 +60,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        //交由工厂管理的拦截器 无法释放静态资源 不交由工厂管理 此处无法注入实例
-        //此处随后需要优化 token不能放在库中
-        //查询token信息 此处不再做token的过期判断
+        //查询token信息是否在库表中存在
         Token tokenEntry = tokenService.queryByToken(token);
         if (tokenEntry == null) {
             res = new JSONObject();
