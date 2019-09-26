@@ -172,6 +172,7 @@ public class MessageService {
             message.setProvince(param.getProvince());
             message.setCity(param.getCity());
             message.setDistrict(param.getDistrict());
+            message.setAddress(param.getAddress());
         }else {
             //从shop表中获取当前商家信息的adcode
             Shop shop = new Shop();
@@ -181,6 +182,7 @@ public class MessageService {
             message.setProvince(one.getProvince());
             message.setCity(one.getCity());
             message.setDistrict(one.getDistrict());
+            message.setAddress(one.getAddress());
         }
         message.setRebate(param.getRebate());
         message.setStartTime(param.getStartTime());
