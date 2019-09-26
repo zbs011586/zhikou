@@ -49,10 +49,11 @@ public class MessageService {
         return HttpResponse.OK("意见保存成功");
     }
 
-    public HttpResponse warnInfo(Date warnTime, int userId) {
+    public HttpResponse warnInfo(Date warnTime, int userId,int pageNum,int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.warnInfo(warnTime);
         List<Message> list = handleMessage(messages, userId);
-        return HttpResponse.OK(list);
+        return HttpResponse.OK(new PageInfo(list));
     }
 
     public HttpResponse myWarnTime(int userId, Date startTime, Date endTime) {

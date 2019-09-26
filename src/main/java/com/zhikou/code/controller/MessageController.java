@@ -72,7 +72,7 @@ public class MessageController extends ApiBaseAction {
 
     @PostMapping("/warn/info")
     public ResponseEntity warnInfo(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.warnInfo(param.getWarnTime(),getUserId()));
+        return ResponseEntity.ok(messageService.warnInfo(param.getWarnTime(),getUserId(),param.getPageNum(),param.getPageSize()));
     }
 
     @PostMapping("/advice")
