@@ -3,7 +3,6 @@ package com.zhikou.code.controller;
 import com.zhikou.code.commons.ApiBaseAction;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +18,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/file")
-@Slf4j
 public class FileController extends ApiBaseAction {
 
     @PostMapping("/upload")
@@ -50,7 +48,6 @@ public class FileController extends ApiBaseAction {
                 }
                 //生成图片的静态资源访问路径
                 String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
-                log.info(url);
                 urls += url +",";
             }
             HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls.substring(0,urls.length() - 1));

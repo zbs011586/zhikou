@@ -36,6 +36,18 @@ public class MessageService {
     @Autowired
     private UserWarnDao userWarnDao;
 
+    @Autowired
+    private AdviceDao adviceDao;
+
+
+    public HttpResponse saveAdvice(int userId,String content){
+        Advice advice = new Advice();
+        advice.setUserId(userId);
+        advice.setContent(content);
+        advice.setCreateTime(new Date());
+        adviceDao.insert(advice);
+        return HttpResponse.OK("意见保存成功");
+    }
 
     public HttpResponse warnInfo(Date warnTime, int userId) {
         List<Message> messages = messageDao.warnInfo(warnTime);

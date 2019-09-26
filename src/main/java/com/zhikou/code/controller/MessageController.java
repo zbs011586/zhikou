@@ -75,4 +75,8 @@ public class MessageController extends ApiBaseAction {
         return ResponseEntity.ok(messageService.warnInfo(param.getWarnTime(),getUserId()));
     }
 
+    @PostMapping("/advice")
+    public ResponseEntity saveAdvice(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.saveAdvice(getUserId(),param.getContent()));
+    }
 }

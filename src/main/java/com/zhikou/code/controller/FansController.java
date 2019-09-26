@@ -1,6 +1,5 @@
 package com.zhikou.code.controller;
 
-import com.zhikou.code.bean.Fans;
 import com.zhikou.code.commons.ApiBaseAction;
 import com.zhikou.code.param.FansParam;
 import com.zhikou.code.service.FansService;
