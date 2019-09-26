@@ -39,5 +39,12 @@
         order by t2.create_time desc
     </select>
 
+    <select id="threeCount" parameterType="INTEGER" resultType="INTEGER">
+        select COUNT(*) from t_user_like where message_id=#{messageId}
+        UNION ALL
+        select COUNT(*) from t_user_scan where message_id=#{messageId}
+        UNION ALL
+        select COUNT(*) from t_user_warn where message_id=#{messageId}
+    </select>
 
 </mapper>

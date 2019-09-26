@@ -218,6 +218,11 @@ public class MessageService {
             }else {
                 message.setFilePaths(null);
             }
+            //处理点赞数量 评论数量 提醒数量
+            List<Integer> threeCount = messageDao.threeCount(message.getMessageId());
+            message.setLikeCount(threeCount.get(0));
+            message.setScanCount(threeCount.get(1));
+            message.setWarnCount(threeCount.get(2));
         }
         return messages;
     }

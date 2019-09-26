@@ -56,4 +56,13 @@ public class Message {
 
     @Transient
     private int warnStatus;
+
+    @Transient
+    private int likeCount;
+
+    @Transient
+    private int scanCount;
+
+    @Transient
+    private int warnCount;
 }
