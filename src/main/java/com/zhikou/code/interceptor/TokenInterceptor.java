@@ -23,7 +23,6 @@ import java.io.PrintWriter;
  * @date 2019/8/25 21:03
  */
 @Slf4j
-@Configuration
 public class TokenInterceptor implements HandlerInterceptor {
 
    @Autowired
