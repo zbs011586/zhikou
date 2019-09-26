@@ -22,7 +22,7 @@ public class MessageController extends ApiBaseAction {
 
     @PostMapping("/new/message")
     public ResponseEntity showMessage(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.newMessage(getUserId(),param.getPageNum(),param.getPageSize()));
+        return ResponseEntity.ok(messageService.newMessage(param.getAdcode(),getUserId(),param.getPageNum(),param.getPageSize()));
     }
 
     @PostMapping("/save/like")

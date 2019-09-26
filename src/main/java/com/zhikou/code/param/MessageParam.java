@@ -15,6 +15,16 @@ public class MessageParam {
 
     private String content;
 
+    private String province;
+
+    private String city;
+
+    private String district;
+
+    private String address;
+
+    private int adcode;
+
     private int rebate;
 
     private String filePath;

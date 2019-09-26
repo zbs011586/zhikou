@@ -35,6 +35,16 @@ public class Message {
 
     private String content;
 
+    private String province;
+
+    private String city;
+
+    private String district;
+
+    private String address;
+
+    private Integer adcode;//消息所属行政区域
+
     private Integer rebate;//折扣大小
 
     private String filePath;//上传文件路径

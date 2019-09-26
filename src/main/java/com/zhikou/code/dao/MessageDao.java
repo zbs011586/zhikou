@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface MessageDao extends Mapper<Message> {
 
-    List<Message> newMessage();
+    List<Message> newMessage(@Param("adcode")int adcode);
 
     List<Message> myLikeMessage(@Param("userId") int userId);
 

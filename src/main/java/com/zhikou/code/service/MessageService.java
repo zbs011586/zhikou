@@ -152,9 +152,9 @@ public class MessageService {
         return HttpResponse.OK("操作成功");
     }
 
-    public HttpResponse newMessage(int userId, int pageNum, int pageSize) {
+    public HttpResponse newMessage(int adcode,int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Message> messages = messageDao.newMessage();
+        List<Message> messages = messageDao.newMessage(adcode);
         List<Message> newMessage = handleMessage(messages, userId);
         return HttpResponse.OK(new PageInfo(newMessage));
     }
@@ -167,6 +167,21 @@ public class MessageService {
         message.setAvatar(user.getAvatar());
         message.setTitle(param.getTitle());
         message.setContent(param.getContent());
+        if (param.getAdcode()!=0){
+            message.setAdcode(param.getAdcode());
+            message.setProvince(param.getProvince());
+            message.setCity(param.getCity());
+            message.setDistrict(param.getDistrict());
+        }else {
+            //从shop表中获取当前商家信息的adcode
+            Shop shop = new Shop();
+            shop.setUserId(userId);
+            Shop one = shopDao.selectOne(shop);
+            message.setAdcode(one.getAdcode());
+            message.setProvince(one.getProvince());
+            message.setCity(one.getCity());
+            message.setDistrict(one.getDistrict());
+        }
         message.setRebate(param.getRebate());
         message.setStartTime(param.getStartTime());
         message.setFilePath(param.getFilePath());
