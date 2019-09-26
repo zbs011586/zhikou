@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhikou.code.dao.ShopDao">
+
+    <select id="selectByLonLat" resultType="shop">
+        select shop_id as shopId,shop_name as shopName from t_shop
+        where (lon between #{minLon} and #{maxLon}) and (lat between #{minLat} and #{maxLat})
+    </select>
+
+</mapper>
