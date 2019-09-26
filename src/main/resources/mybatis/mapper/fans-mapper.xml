@@ -11,13 +11,13 @@
     </select>
 
     <select id="getFansList" parameterType="INTEGER" resultType="HashMap">
-        select fans_user_id as userId,fans_nickname as nickName,fans_avatar as avatar
-        from t_fans where concern_user_id=#{userId}
+        select t1.fans_user_id as userId,t2.user_role as role,t1.fans_nickname as nickName,t1.fans_avatar as avatar
+        from t_fans t1 left join t_user t2 on t1.fans_user_id=t2.user_id where t1.concern_user_id=#{userId}
     </select>
 
     <select id="getConcernList" parameterType="INTEGER" resultType="HashMap">
-        select concern_user_id as userId,concern_nickname as nickName,concern_avatar as avatar
-        from t_fans where fans_user_id=#{userId}
+        select t1.concern_user_id as userId,t2.user_role as role,t1.concern_nickname as nickName,t1.concern_avatar as avatar
+        from t_fans t1 left join t_user t2 on t1.concern_user_id=t2.user_id where t1.fans_user_id=#{userId}
     </select>
 
 </mapper>

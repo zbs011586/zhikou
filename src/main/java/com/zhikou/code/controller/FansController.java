@@ -2,6 +2,7 @@ package com.zhikou.code.controller;
 
 import com.zhikou.code.bean.Fans;
 import com.zhikou.code.commons.ApiBaseAction;
+import com.zhikou.code.param.FansParam;
 import com.zhikou.code.service.FansService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ public class FansController extends ApiBaseAction {
     private FansService fansService;
 
     @PostMapping("/status")
-    public ResponseEntity isFans(@RequestBody Fans fans){
-        return ResponseEntity.ok(fansService.isFans(fans.getConcernUserId(),getUserId()));
+    public ResponseEntity isFans(@RequestBody FansParam param){
+        return ResponseEntity.ok(fansService.isFans(param.getConcernUserId(),getUserId()));
     }
 
     @PostMapping("/count")
@@ -38,12 +39,8 @@ public class FansController extends ApiBaseAction {
     }
 
     @PostMapping("/save")
-    public ResponseEntity saveConcern(@RequestBody Fans fans){
-        return ResponseEntity.ok(fansService.saveConcern(fans.getConcernUserId(),getUserId()));
+    public ResponseEntity saveFansConcern(@RequestBody FansParam param){
+        return ResponseEntity.ok(fansService.saveFansConcern(param.getConcernUserId(),getUserId(),param.getType()));
     }
 
-    @PostMapping("/del")
-    public ResponseEntity delConcern(@RequestBody Fans fans){
-        return ResponseEntity.ok(fansService.delConcern(fans.getConcernUserId(),getUserId()));
-    }
 }
