@@ -71,7 +71,7 @@ public class Message {
     private int likeCount;
 
     @Transient
-    private int scanCount;
+    private int commentCount;
 
     @Transient
     private int warnCount;

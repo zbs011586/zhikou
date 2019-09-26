@@ -2,9 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhikou.code.dao.UserCommentDao">
 
-    <select id="commentUser" resultType="comment">
+    <select id="commentUser" resultType="comment" parameterType="INTEGER">
         select message_id as messageId,user_id as userId,user_name as userName,content,create_time as createTime
-        from t_user_comment order by create_time asc
+        from t_user_comment where message_id=#{messageId}
+        order by create_time asc
     </select>
 
 </mapper>
