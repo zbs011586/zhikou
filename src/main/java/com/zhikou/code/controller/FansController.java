@@ -19,37 +19,31 @@ public class FansController extends ApiBaseAction {
 
     @PostMapping("/status")
     public ResponseEntity isFans(@RequestBody Fans fans){
-        Integer userId = this.getUserId();
-        return ResponseEntity.ok(fansService.isFans(fans.getConcernUserId(),userId));
+        return ResponseEntity.ok(fansService.isFans(fans.getConcernUserId(),getUserId()));
     }
 
     @PostMapping("/count")
     public ResponseEntity getConcernAndFansCount(){
-        Integer userId = this.getUserId();
-        return ResponseEntity.ok(fansService.getConcernAndFansCount(userId));
+        return ResponseEntity.ok(fansService.getConcernAndFansCount(getUserId()));
     }
 
     @PostMapping("/concern/list")
     public ResponseEntity getConcernList(){
-        Integer userId = this.getUserId();
-        return ResponseEntity.ok(fansService.getConcernList(userId));
+        return ResponseEntity.ok(fansService.getConcernList(getUserId()));
     }
 
     @PostMapping("/fans/list")
     public ResponseEntity getFansList(){
-        Integer userId = this.getUserId();
-        return ResponseEntity.ok(fansService.getFansList(userId));
+        return ResponseEntity.ok(fansService.getFansList(getUserId()));
     }
 
     @PostMapping("/save")
     public ResponseEntity saveConcern(@RequestBody Fans fans){
-        Integer userId = this.getUserId();
-        return ResponseEntity.ok(fansService.saveConcern(fans.getConcernUserId(),userId));
+        return ResponseEntity.ok(fansService.saveConcern(fans.getConcernUserId(),getUserId()));
     }
 
     @PostMapping("/del")
     public ResponseEntity delConcern(@RequestBody Fans fans){
-        Integer userId = this.getUserId();
-        return ResponseEntity.ok(fansService.delConcern(fans.getConcernUserId(),userId));
+        return ResponseEntity.ok(fansService.delConcern(fans.getConcernUserId(),getUserId()));
     }
 }

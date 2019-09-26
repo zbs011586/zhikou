@@ -27,14 +27,15 @@ public class AccountService {
         HashMap map = new HashMap();
         if (one.getUser_role() == 0){
             map.put("role",0);
-            map.put("info",one);
+            map.put("shopInfo",null);
         }else {
             Shop param = new Shop();
             param.setUserId(userId);
             Shop shop = shopDao.selectOne(param);
             map.put("role",1);
-            map.put("info",shop);
+            map.put("shopInfo",shop);
         }
+        map.put("userInfo",one);
         return HttpResponse.OK(map);
     }
 

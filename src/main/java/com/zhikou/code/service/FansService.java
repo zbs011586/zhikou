@@ -29,11 +29,11 @@ public class FansService {
         param.setFansUserId(fansUserId);
         Fans fans = fansDao.selectOne(param);
         HashMap map = new HashMap();
-        //已关注status=0 未关注status=1
+        //status=0 未关注 status=1已关注
         if (fans == null){
-            map.put("status",1);
-        }else {
             map.put("status",0);
+        }else {
+            map.put("status",1);
         }
         return HttpResponse.OK(map);
     }
