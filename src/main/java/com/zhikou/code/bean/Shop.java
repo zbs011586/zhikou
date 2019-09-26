@@ -28,7 +28,13 @@ public class Shop {
 
     private String district;
 
+    private Integer adcode;
+
     private String address;
+
+    private Double lon;
+
+    protected Double lat;
 
     private String description;
 

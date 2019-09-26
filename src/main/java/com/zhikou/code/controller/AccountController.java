@@ -126,7 +126,7 @@ public class AccountController extends ApiBaseAction {
      */
     @PostMapping("/shop/registry")
     public ResponseEntity shopRegistry(@RequestBody Shop param){
-        return ResponseEntity.ok(accountService.shopRegistry(param));
+        return ResponseEntity.ok(accountService.shopRegistry(getUserId(),param));
     }
 
     /**
