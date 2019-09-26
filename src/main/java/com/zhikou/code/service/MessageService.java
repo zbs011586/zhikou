@@ -205,10 +205,19 @@ public class MessageService {
      */
     private List<Message> handleMessage(List<Message> messages, int userId) {
         for (Message message : messages) {
+            //处理三种状态
             Map<String, Object> map = handleStatus(message.getMessageId(), userId);
             message.setShopStatus((Integer) map.get("shopStatus"));
             message.setLikeStatus((Integer) map.get("likeStatus"));
             message.setWarnStatus((Integer) map.get("warnStatus"));
+            //处理filePath
+            String filePath = message.getFilePath();
+            if (filePath!=null && !"".equals(filePath)){
+                String[] filePaths = filePath.split(",");
+                message.setFilePaths(filePaths);
+            }else {
+                message.setFilePaths(null);
+            }
         }
         return messages;
     }

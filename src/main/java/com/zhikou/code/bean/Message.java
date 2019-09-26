@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description 促销活动信息表
@@ -37,6 +38,9 @@ public class Message {
     private Integer rebate;//折扣大小
 
     private String filePath;//上传文件路径
+
+    @Transient
+    private String[] filePaths;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;//创建时间
