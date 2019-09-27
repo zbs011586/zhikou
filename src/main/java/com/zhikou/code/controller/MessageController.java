@@ -79,4 +79,10 @@ public class MessageController extends ApiBaseAction {
     public ResponseEntity saveAdvice(@RequestBody MessageParam param){
         return ResponseEntity.ok(messageService.saveAdvice(getUserId(),param.getContent()));
     }
+
+    @PostMapping("/data")
+    public ResponseEntity messageData(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.messageData(getUserId(),param.getType(),param.getAdcode(),param.getClassify(),param.getInputText(),
+                param.getRebateOrder(),param.getLon(),param.getLat(),param.getRadius(),param.getPageNum(),param.getPageSize()));
+    }
 }

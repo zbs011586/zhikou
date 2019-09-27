@@ -2,12 +2,16 @@ package com.zhikou.code.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.spatial4j.core.context.SpatialContext;
+import com.spatial4j.core.distance.DistanceUtils;
+import com.spatial4j.core.shape.Rectangle;
 import com.zhikou.code.bean.*;
 import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.dao.*;
 import com.zhikou.code.param.MessageParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,8 +43,38 @@ public class MessageService {
     @Autowired
     private AdviceDao adviceDao;
 
+    @Autowired
+    private AccountService accountService;
 
-    public HttpResponse saveAdvice(int userId,String content){
+    public HttpResponse messageData(int userId,int type, int adcode, String classify, String inputText,
+                                    String rebateOrder, double lon, double lat, int radius,int pageNum,int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        double minLon = 0d;
+        double maxLon = 0d;
+        double minLat = 0d;
+        double maxLat = 0d;
+        if (lon != 0 && lat != 0 && radius != 0) {
+            //计算筛选的经纬度范围
+            SpatialContext geo = SpatialContext.GEO;
+            Rectangle rectangle = geo.getDistCalc().calcBoxByDistFromPt(geo.makePoint(lon, lat), radius * DistanceUtils.KM_TO_DEG, geo, null);
+            minLon = rectangle.getMinX();
+            maxLon = rectangle.getMaxX();
+            minLat = rectangle.getMinY();
+            maxLat = rectangle.getMaxY();
+        }
+
+        if (type == 0){
+            //查询消息
+            List<Message> messages = messageDao.messageData(adcode, classify, inputText, rebateOrder, minLon, maxLon, minLat, maxLat);
+            List<Message> list = handleMessage(messages, userId);
+            return HttpResponse.OK(new PageInfo(list));
+        }else {
+            //查询商家
+            return HttpResponse.OK("");
+        }
+    }
+
+    public HttpResponse saveAdvice(int userId, String content) {
         Advice advice = new Advice();
         advice.setUserId(userId);
         advice.setContent(content);
@@ -49,7 +83,7 @@ public class MessageService {
         return HttpResponse.OK("意见保存成功");
     }
 
-    public HttpResponse warnInfo(Date warnTime, int userId,int pageNum,int pageSize) {
+    public HttpResponse warnInfo(Date warnTime, int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.warnInfo(warnTime);
         List<Message> list = handleMessage(messages, userId);
@@ -153,7 +187,7 @@ public class MessageService {
         return HttpResponse.OK("操作成功");
     }
 
-    public HttpResponse newMessage(int adcode,int userId, int pageNum, int pageSize) {
+    public HttpResponse newMessage(int adcode, int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.newMessage(adcode);
         List<Message> newMessage = handleMessage(messages, userId);
@@ -168,14 +202,21 @@ public class MessageService {
         message.setAvatar(user.getAvatar());
         message.setTitle(param.getTitle());
         message.setContent(param.getContent());
-        if (param.getAdcode()!=0){
+        if (param.getAdcode() != 0) {
             message.setAdcode(param.getAdcode());
             message.setProvince(param.getProvince());
             message.setCity(param.getCity());
             message.setDistrict(param.getDistrict());
             message.setAddress(param.getAddress());
             message.setClassify(param.getClassify());
-        }else {
+            //获取经纬度
+            String location = accountService.getLocation(param.getProvince() + param.getCity() + param.getDistrict() + param.getAddress());
+            String[] lonLat = StringUtils.split(location, ",");
+            Double lon = Double.valueOf(lonLat[0]);
+            Double lat = Double.valueOf(lonLat[1]);
+            message.setLon(lon);
+            message.setLat(lat);
+        } else {
             //从shop表中获取当前商家信息的adcode
             Shop shop = new Shop();
             shop.setUserId(userId);
@@ -186,6 +227,8 @@ public class MessageService {
             message.setDistrict(one.getDistrict());
             message.setAddress(one.getAddress());
             message.setClassify(one.getClassify());
+            message.setLon(one.getLon());
+            message.setLat(one.getLon());
         }
         message.setRebate(param.getRebate());
         message.setStartTime(param.getStartTime());
@@ -244,10 +287,10 @@ public class MessageService {
             message.setWarnStatus((Integer) map.get("warnStatus"));
             //处理filePath
             String filePath = message.getFilePath();
-            if (filePath!=null && !"".equals(filePath)){
+            if (filePath != null && !"".equals(filePath)) {
                 String[] filePaths = filePath.split(",");
                 message.setFilePaths(filePaths);
-            }else {
+            } else {
                 message.setFilePaths(null);
             }
             //处理点赞数量 评论数量 提醒数量

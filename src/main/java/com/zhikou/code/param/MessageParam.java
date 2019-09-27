@@ -45,4 +45,13 @@ public class MessageParam {
 
     private Date warnTime;
 
+    private String inputText;
+
+    private String rebateOrder;
+
+    private double lon;
+
+    private double lat;
+
+    private int radius;
 }

@@ -43,6 +43,10 @@ public class Message {
 
     private String address;
 
+    private Double lon;
+
+    private Double lat;
+
     private Integer adcode;//消息所属行政区域
 
     private Integer rebate;//折扣大小

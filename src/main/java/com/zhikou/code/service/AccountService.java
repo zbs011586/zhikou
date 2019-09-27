@@ -68,7 +68,7 @@ public class AccountService {
         return HttpResponse.OK("入驻成功");
     }
 
-    private String getLocation(String address){
+    public String getLocation(String address){
         //调用高德api的逆地理编码接口 获取商家地址的经纬度信息
         RestTemplate template = new RestTemplate();
         ResponseEntity<String> responseEntity = template.getForEntity("https://restapi.amap.com/v3/geocode/geo?address="+address+"&output=JSON&key=ebe1b5a862d0ffac954af5cfc9261d06", String.class);
