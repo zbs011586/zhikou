@@ -2,7 +2,6 @@ package com.zhikou.code.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mysql.cj.util.StringUtils;
-import com.zhikou.code.annotation.IgnoreAuth;
 import com.zhikou.code.bean.FullUserInfo;
 import com.zhikou.code.bean.Shop;
 import com.zhikou.code.bean.UserInfo;
@@ -10,6 +9,7 @@ import com.zhikou.code.bean.User;
 import com.zhikou.code.commons.ApiBaseAction;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
+import com.zhikou.code.commons.IgnoreAuth;
 import com.zhikou.code.dao.ShopDao;
 import com.zhikou.code.service.AccountService;
 import com.zhikou.code.service.TokenService;

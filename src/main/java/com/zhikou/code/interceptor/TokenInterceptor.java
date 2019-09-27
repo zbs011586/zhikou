@@ -1,14 +1,13 @@
 package com.zhikou.code.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zhikou.code.annotation.IgnoreAuth;
 import com.zhikou.code.bean.Token;
 import com.zhikou.code.commons.Constants;
+import com.zhikou.code.commons.IgnoreAuth;
 import com.zhikou.code.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 

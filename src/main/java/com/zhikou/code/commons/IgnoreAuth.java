@@ -1,4 +1,4 @@
-package com.zhikou.code.annotation;
+package com.zhikou.code.commons;
 
 import java.lang.annotation.*;
 

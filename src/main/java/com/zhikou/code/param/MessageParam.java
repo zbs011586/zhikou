@@ -25,6 +25,8 @@ public class MessageParam {
 
     private int adcode;
 
+    private String classify;//分类
+
     private int rebate;
 
     private String filePath;

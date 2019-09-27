@@ -47,6 +47,8 @@ public class Message {
 
     private Integer rebate;//折扣大小
 
+    private String classify;//分类
+
     private String filePath;//上传文件路径
 
     @Transient
