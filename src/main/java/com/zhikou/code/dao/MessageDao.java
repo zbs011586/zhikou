@@ -23,7 +23,7 @@ public interface MessageDao extends Mapper<Message> {
     List<Integer> threeCount(@Param("messageId")int messageId);
 
     List<Message> messageData(@Param("adcode")int adcode,@Param("classify")String classify,@Param("inputText")String inputText,
-                              @Param("rebateOrder")String rebateOrder,@Param("minLon")double minLon,@Param("maxLon")double maxLon,
+                              @Param("rebateOrder")int rebateOrder,@Param("minLon")double minLon,@Param("maxLon")double maxLon,
                               @Param("minLat")double minLat,@Param("maxLat")double maxLat);
 
 }

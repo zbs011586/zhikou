@@ -2,9 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zhikou.code.dao.ShopDao">
 
-    <select id="selectByLonLat" resultType="shop">
-        select shop_id as shopId,shop_name as shopName from t_shop
-        where (lon between #{minLon} and #{maxLon}) and (lat between #{minLat} and #{maxLat})
+    <select id="shopData" resultType="shop">
+    select message_id as messageId,user_id as userId,user_name as userName,
+    province,city,district,address,adcode,classify,lon,lat,
+    avatar,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
+    from t_shop
+    <where>
+        <if test="inputText != null and inputText != '' ">
+            title like CONCAT('%',CONCAT(#{inputText},'%'))
+        </if>
+        <if test="classify != null and classify != '' ">
+            and classify=#{classify}
+        </if>
+        <if test="minLon != 0 and maxLon !=0 and minLat !=0 and maxLat !=0">
+            and (lon between #{minLon} and #{maxLon}) and (lat between #{minLat} and #{maxLat})
+        </if>
+        and adcode=#{adcode}
+    </where>
     </select>
 
 </mapper>

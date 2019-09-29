@@ -47,7 +47,7 @@ public class MessageService {
     private AccountService accountService;
 
     public HttpResponse messageData(int userId,int type, int adcode, String classify, String inputText,
-                                    String rebateOrder, double lon, double lat, int radius,int pageNum,int pageSize) {
+                                    int rebateOrder, double lon, double lat, int radius,int pageNum,int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         double minLon = 0d;
         double maxLon = 0d;
@@ -67,9 +67,20 @@ public class MessageService {
             //查询消息
             List<Message> messages = messageDao.messageData(adcode, classify, inputText, rebateOrder, minLon, maxLon, minLat, maxLat);
             List<Message> list = handleMessage(messages, userId);
+            //计算距离
+            if (list.size() !=0){
+                for (Message message : list) {
+                    double messageLon =message.getLon();
+                    double messageLat =message.getLat();
+                    SpatialContext geo = SpatialContext.GEO;
+                    double distance = geo.calcDistance(geo.makePoint(lon, lat), geo.makePoint(messageLon, messageLat)) * DistanceUtils.DEG_TO_KM;
+                    message.setDistance(distance);
+                }
+            }
             return HttpResponse.OK(new PageInfo(list));
         }else {
             //查询商家
+
             return HttpResponse.OK("");
         }
     }
@@ -187,11 +198,21 @@ public class MessageService {
         return HttpResponse.OK("操作成功");
     }
 
-    public HttpResponse newMessage(int adcode, int userId, int pageNum, int pageSize) {
+    public HttpResponse newMessage(double lon,double lat,int adcode, int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.newMessage(adcode);
-        List<Message> newMessage = handleMessage(messages, userId);
-        return HttpResponse.OK(new PageInfo(newMessage));
+        List<Message> list = handleMessage(messages, userId);
+        //计算距离
+        if (list.size() !=0){
+            for (Message message : list) {
+                double messageLon =message.getLon();
+                double messageLat =message.getLat();
+                SpatialContext geo = SpatialContext.GEO;
+                double distance = geo.calcDistance(geo.makePoint(lon, lat), geo.makePoint(messageLon, messageLat)) * DistanceUtils.DEG_TO_KM;
+                message.setDistance(distance);
+            }
+        }
+        return HttpResponse.OK(new PageInfo(list));
     }
 
     public HttpResponse createMessage(MessageParam param, Integer userId) {
@@ -285,6 +306,8 @@ public class MessageService {
             message.setShopStatus((Integer) map.get("shopStatus"));
             message.setLikeStatus((Integer) map.get("likeStatus"));
             message.setWarnStatus((Integer) map.get("warnStatus"));
+            message.setShopName((String) map.get("shopName"));
+            message.setShopPhoto((String) map.get("shopPhoto"));
             //处理filePath
             String filePath = message.getFilePath();
             if (filePath != null && !"".equals(filePath)) {
@@ -315,8 +338,12 @@ public class MessageService {
         Shop shopOne = shopDao.selectOne(shop);
         if (shopOne == null) {
             map.put("shopStatus", 0);//不是商家
+            map.put("shopName",null);
+            map.put("shopPhoto",null);
         } else {
             map.put("shopStatus", 1);//是商家
+            map.put("shopName",shopOne.getShopName());
+            map.put("shopPhoto",shopOne.getShopPhoto());
         }
         //处理点赞状态
         UserLike userLike = new UserLike();

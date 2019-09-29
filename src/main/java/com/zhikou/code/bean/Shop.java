@@ -20,6 +20,8 @@ public class Shop {
 
     private String shopName;
 
+    private String shopPhoto;
+
     private Integer userId;
 
     private String province;

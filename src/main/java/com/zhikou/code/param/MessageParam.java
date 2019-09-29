@@ -47,7 +47,7 @@ public class MessageParam {
 
     private String inputText;
 
-    private String rebateOrder;
+    private int rebateOrder;
 
     private double lon;
 

@@ -29,6 +29,12 @@ public class Message {
 
     private String userName;
 
+    @Transient
+    private String shopName;
+
+    @Transient
+    private String shopPhoto;
+
     private String avatar;
 
     private String title;
@@ -48,6 +54,9 @@ public class Message {
     private Double lat;
 
     private Integer adcode;//消息所属行政区域
+
+    @Transient
+    private double distance;
 
     private Integer rebate;//折扣大小
 
@@ -81,4 +90,6 @@ public class Message {
 
     @Transient
     private int warnCount;
+
+
 }

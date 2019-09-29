@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface ShopDao extends Mapper<Shop> {
 
-    List<Shop> selectByLonLat(@Param("minLon")double minLon,@Param("maxLon")double maxLon,@Param("minLat")double minLat,@Param("maxLat")double maxLat);
+    List<Shop> shopData(@Param("adcode")int adcode, @Param("classify")String classify, @Param("inputText")String inputText,
+                              @Param("minLon")double minLon, @Param("maxLon")double maxLon,
+                              @Param("minLat")double minLat, @Param("maxLat")double maxLat);
 }
