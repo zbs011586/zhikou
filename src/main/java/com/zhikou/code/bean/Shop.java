@@ -34,6 +34,9 @@ public class Shop {
 
     private String address;
 
+    @Transient
+    private double distance;
+
     private Double lon;
 
     protected Double lat;
@@ -47,5 +50,8 @@ public class Shop {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date updateTime;
+
+    @Transient
+    private String userName;
 
 }

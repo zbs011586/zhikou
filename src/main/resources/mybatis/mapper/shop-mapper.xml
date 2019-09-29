@@ -3,21 +3,22 @@
 <mapper namespace="com.zhikou.code.dao.ShopDao">
 
     <select id="shopData" resultType="shop">
-    select message_id as messageId,user_id as userId,user_name as userName,
-    province,city,district,address,adcode,classify,lon,lat,
-    avatar,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
-    from t_shop
+    select t1.shop_name as shopName,t1.shop_photo as shopPhoto,
+    t2.user_id as userId,t2.username as userName,
+    t1.province,t1.city,t1.district,t1.address,t1.adcode,t1.classify,t1.lon,t1.lat,
+    t1.description,t1.create_time as createTime
+    from t_shop t1 left join t_user t2 on t1.user_id=t2.user_id
     <where>
         <if test="inputText != null and inputText != '' ">
-            title like CONCAT('%',CONCAT(#{inputText},'%'))
+            t1.shop_name like CONCAT('%',CONCAT(#{inputText},'%'))
         </if>
         <if test="classify != null and classify != '' ">
-            and classify=#{classify}
+            and t1.classify=#{classify}
         </if>
         <if test="minLon != 0 and maxLon !=0 and minLat !=0 and maxLat !=0">
-            and (lon between #{minLon} and #{maxLon}) and (lat between #{minLat} and #{maxLat})
+            and (t1.lon between #{minLon} and #{maxLon}) and (t1.lat between #{minLat} and #{maxLat})
         </if>
-        and adcode=#{adcode}
+        and t1.adcode=#{adcode}
     </where>
     </select>
 

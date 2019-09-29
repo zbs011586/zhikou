@@ -80,8 +80,17 @@ public class MessageService {
             return HttpResponse.OK(new PageInfo(list));
         }else {
             //查询商家
-
-            return HttpResponse.OK("");
+            List<Shop> shops = shopDao.shopData(adcode, classify, inputText, minLon, maxLon, minLat, maxLat);
+            if (shops.size() !=0){
+                for (Shop shop : shops) {
+                    double shopLon =shop.getLon();
+                    double shopLat =shop.getLat();
+                    SpatialContext geo = SpatialContext.GEO;
+                    double distance = geo.calcDistance(geo.makePoint(lon, lat), geo.makePoint(shopLon, shopLat)) * DistanceUtils.DEG_TO_KM;
+                    shop.setDistance(distance);
+                }
+            }
+            return HttpResponse.OK(new PageInfo(shops));
         }
     }
 
