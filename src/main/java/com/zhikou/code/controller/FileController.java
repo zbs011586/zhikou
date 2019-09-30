@@ -47,7 +47,8 @@ public class FileController extends ApiBaseAction {
                     e.printStackTrace();
                 }
                 //生成图片的静态资源访问路径
-                String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
+                //String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
+                String url = "https://www.zhiko.store/api/image/"+getUserId()+"/"+newFileName;
                 urls += url +",";
             }
             HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls.substring(0,urls.length() - 1));

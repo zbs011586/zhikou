@@ -90,6 +90,9 @@ public class MessageService {
                     shop.setDistance(distance);
                 }
             }
+            if (inputText !=null || !inputText.isEmpty()){
+                //记录关键词搜索历史和用户搜索记录
+            }
             return HttpResponse.OK(new PageInfo(shops));
         }
     }
@@ -375,5 +378,9 @@ public class MessageService {
             map.put("warnStatus", 1);//已提醒
         }
         return map;
+    }
+
+    private void saveSearchRecord(int userId,String inputText){
+
     }
 }
