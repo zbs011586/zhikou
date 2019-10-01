@@ -18,7 +18,7 @@ public interface MessageDao extends Mapper<Message> {
 
     List<Message> myWarnMessage(@Param("userId") int userId);
 
-    List<Message> warnInfo(@Param("warnTime") Date warnTime);
+    List<Message> warnInfo(@Param("warnTime") Date warnTime,@Param("userId")int userId);
 
     List<Integer> threeCount(@Param("messageId")int messageId);
 

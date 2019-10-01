@@ -108,7 +108,7 @@ public class MessageService {
 
     public HttpResponse warnInfo(Date warnTime, int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Message> messages = messageDao.warnInfo(warnTime);
+        List<Message> messages = messageDao.warnInfo(warnTime,userId);
         List<Message> list = handleMessage(messages, userId);
         return HttpResponse.OK(new PageInfo(list));
     }
