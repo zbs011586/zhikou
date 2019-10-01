@@ -349,11 +349,11 @@ public class MessageService {
         shop.setUserId(userId);
         Shop shopOne = shopDao.selectOne(shop);
         if (shopOne == null) {
-            map.put("shopStatus", 0);//不是商家
+            map.put("shopStatus", 1);//不是商家
             map.put("shopName",null);
             map.put("shopPhoto",null);
         } else {
-            map.put("shopStatus", 1);//是商家
+            map.put("shopStatus", 0);//是商家
             map.put("shopName",shopOne.getShopName());
             map.put("shopPhoto",shopOne.getShopPhoto());
         }
@@ -363,9 +363,9 @@ public class MessageService {
         userLike.setUserId(userId);
         UserLike likeOne = userLikeDao.selectOne(userLike);
         if (likeOne == null) {
-            map.put("likeStatus", 0);//未点赞
+            map.put("likeStatus", 1);//未点赞
         } else {
-            map.put("likeStatus", 1);//已点赞
+            map.put("likeStatus", 0);//已点赞
         }
         //处理提醒我状态
         UserWarn userWarn = new UserWarn();
@@ -373,9 +373,9 @@ public class MessageService {
         userWarn.setUserId(userId);
         UserWarn one = userWarnDao.selectOne(userWarn);
         if (one == null) {
-            map.put("warnStatus", 0);//未提醒
+            map.put("warnStatus", 1);//未提醒
         } else {
-            map.put("warnStatus", 1);//已提醒
+            map.put("warnStatus", 0);//已提醒
         }
         return map;
     }
