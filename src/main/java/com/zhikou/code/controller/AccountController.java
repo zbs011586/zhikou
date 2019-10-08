@@ -135,6 +135,7 @@ public class AccountController extends ApiBaseAction {
      * @author 张宝帅
      * @date 2019/9/2 18:08
      */
+    @IgnoreAuth
     @PostMapping("/user/info")
     public ResponseEntity getUserInfo(@RequestBody UserParam param){
         return ResponseEntity.ok(accountService.getUserInfo(param.getUserId()));

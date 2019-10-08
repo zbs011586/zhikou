@@ -1,6 +1,7 @@
 package com.zhikou.code.controller;
 
 import com.zhikou.code.commons.ApiBaseAction;
+import com.zhikou.code.commons.IgnoreAuth;
 import com.zhikou.code.param.FansParam;
 import com.zhikou.code.param.UserParam;
 import com.zhikou.code.service.FansService;
@@ -28,11 +29,13 @@ public class FansController extends ApiBaseAction {
         return ResponseEntity.ok(fansService.getConcernAndFansCount(getUserId()));
     }
 
+    @IgnoreAuth
     @PostMapping("/concern/list")
     public ResponseEntity getConcernList(@RequestBody UserParam param){
         return ResponseEntity.ok(fansService.getConcernList(param.getUserId()));
     }
 
+    @IgnoreAuth
     @PostMapping("/fans/list")
     public ResponseEntity getFansList(@RequestBody UserParam param){
         return ResponseEntity.ok(fansService.getFansList(param.getUserId()));
