@@ -22,9 +22,10 @@ public class MessageController extends ApiBaseAction {
         return ResponseEntity.ok(messageService.createMessage(param,getUserId()));
     }
 
+    @IgnoreAuth
     @PostMapping("/new/message")
     public ResponseEntity showMessage(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.newMessage(param.getLon(),param.getLat(),param.getAdcode(),getUserId(),param.getPageNum(),param.getPageSize()));
+        return ResponseEntity.ok(messageService.newMessage(param.getLon(),param.getLat(),param.getAdcode(),param.getMyUserId(),param.getPageNum(),param.getPageSize()));
     }
 
     @PostMapping("/save/like")
@@ -37,11 +38,13 @@ public class MessageController extends ApiBaseAction {
         return ResponseEntity.ok(messageService.saveComment(param.getMessageId(),getUserId(),param.getContent()));
     }
 
+    @IgnoreAuth
     @PostMapping("/comment/user")
     public ResponseEntity commentUser(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.commentUser(getUserId(),param.getMessageId(),param.getPageNum(),param.getPageSize()));
+        return ResponseEntity.ok(messageService.commentUser(param.getMyUserId(),param.getMessageId(),param.getPageNum(),param.getPageSize()));
     }
 
+    @IgnoreAuth
     @PostMapping("/like/user")
     public ResponseEntity likeUser(@RequestBody MessageParam param){
         return ResponseEntity.ok(messageService.likeUser(param.getMessageId()));
@@ -82,9 +85,10 @@ public class MessageController extends ApiBaseAction {
         return ResponseEntity.ok(messageService.saveAdvice(getUserId(),param.getContent()));
     }
 
+    @IgnoreAuth
     @PostMapping("/data")
     public ResponseEntity messageData(@RequestBody MessageParam param){
-        return ResponseEntity.ok(messageService.messageData(getUserId(),param.getType(),param.getAdcode(),param.getClassify(),param.getInputText(),
+        return ResponseEntity.ok(messageService.messageData(param.getMyUserId(),param.getType(),param.getAdcode(),param.getClassify(),param.getInputText(),
                 param.getRebateOrder(),param.getLon(),param.getLat(),param.getRadius(),param.getPageNum(),param.getPageSize()));
     }
 

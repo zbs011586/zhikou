@@ -54,4 +54,7 @@ public class MessageParam {
     private double lat;
 
     private int radius;
+
+    private int myUserId;
+
 }
