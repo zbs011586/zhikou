@@ -83,4 +83,12 @@
         </if>
     </select>
 
+    <select id="latelyMessage" resultType="message" parameterType="INTEGER">
+        select message_id as messageId,user_id as userId,user_name as userName,
+        province,city,district,address,adcode,classify,lon,lat,
+        avatar,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
+        from t_message where user_id=#{userId}
+        order by create_time desc
+    </select>
+
 </mapper>

@@ -46,6 +46,13 @@ public class MessageService {
     @Autowired
     private AccountService accountService;
 
+    public HttpResponse latelyMessage(int myUserId,int goalUserId,int pageNum,int pageSize){
+        PageHelper.startPage(pageNum,pageSize);
+        List<Message> messages = messageDao.latelyMessage(goalUserId);
+        List<Message> list = handleMessage(messages, myUserId);
+        return HttpResponse.OK(new PageInfo(list));
+    }
+
     public HttpResponse messageData(int userId,int type, int adcode, String classify, String inputText,
                                     int rebateOrder, double lon, double lat, int radius,int pageNum,int pageSize) {
         PageHelper.startPage(pageNum, pageSize);

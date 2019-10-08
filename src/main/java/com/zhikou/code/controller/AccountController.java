@@ -138,6 +138,6 @@ public class AccountController extends ApiBaseAction {
     @IgnoreAuth
     @PostMapping("/user/info")
     public ResponseEntity getUserInfo(@RequestBody UserParam param){
-        return ResponseEntity.ok(accountService.getUserInfo(param.getUserId()));
+        return ResponseEntity.ok(accountService.getUserInfo(param.getGoalUserId()));
     }
 }

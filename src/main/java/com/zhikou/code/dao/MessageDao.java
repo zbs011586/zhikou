@@ -26,4 +26,5 @@ public interface MessageDao extends Mapper<Message> {
                               @Param("rebateOrder")int rebateOrder,@Param("minLon")double minLon,@Param("maxLon")double maxLon,
                               @Param("minLat")double minLat,@Param("maxLat")double maxLat);
 
+    List<Message> latelyMessage(@Param("userId") int userId);
 }

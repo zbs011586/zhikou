@@ -1,7 +1,9 @@
 package com.zhikou.code.controller;
 
 import com.zhikou.code.commons.ApiBaseAction;
+import com.zhikou.code.commons.IgnoreAuth;
 import com.zhikou.code.param.MessageParam;
+import com.zhikou.code.param.UserParam;
 import com.zhikou.code.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -84,5 +86,11 @@ public class MessageController extends ApiBaseAction {
     public ResponseEntity messageData(@RequestBody MessageParam param){
         return ResponseEntity.ok(messageService.messageData(getUserId(),param.getType(),param.getAdcode(),param.getClassify(),param.getInputText(),
                 param.getRebateOrder(),param.getLon(),param.getLat(),param.getRadius(),param.getPageNum(),param.getPageSize()));
+    }
+
+    @IgnoreAuth
+    @PostMapping("/lately")
+    public ResponseEntity latelyMessage(@RequestBody UserParam param){
+        return ResponseEntity.ok(messageService.latelyMessage(param.getMyUserId(),param.getGoalUserId(),param.getPageNum(),param.getPageSize()));
     }
 }

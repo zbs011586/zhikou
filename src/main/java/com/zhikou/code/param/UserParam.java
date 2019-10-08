@@ -9,5 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class UserParam {
 
-    private int userId;
+    private int pageNum;
+
+    private int pageSize;
+
+    private int goalUserId;
+
+    private int myUserId;
+
 }

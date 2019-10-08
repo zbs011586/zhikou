@@ -24,21 +24,22 @@ public class FansController extends ApiBaseAction {
         return ResponseEntity.ok(fansService.isFans(param.getConcernUserId(),getUserId()));
     }
 
+    @IgnoreAuth
     @PostMapping("/count")
-    public ResponseEntity getConcernAndFansCount(){
-        return ResponseEntity.ok(fansService.getConcernAndFansCount(getUserId()));
+    public ResponseEntity getConcernAndFansCount(@RequestBody UserParam param){
+        return ResponseEntity.ok(fansService.getConcernAndFansCount(param.getGoalUserId()));
     }
 
     @IgnoreAuth
     @PostMapping("/concern/list")
     public ResponseEntity getConcernList(@RequestBody UserParam param){
-        return ResponseEntity.ok(fansService.getConcernList(param.getUserId()));
+        return ResponseEntity.ok(fansService.getConcernList(param.getGoalUserId()));
     }
 
     @IgnoreAuth
     @PostMapping("/fans/list")
     public ResponseEntity getFansList(@RequestBody UserParam param){
-        return ResponseEntity.ok(fansService.getFansList(param.getUserId()));
+        return ResponseEntity.ok(fansService.getFansList(param.getGoalUserId()));
     }
 
     @PostMapping("/save")
