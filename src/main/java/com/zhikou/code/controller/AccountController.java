@@ -11,6 +11,7 @@ import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.commons.IgnoreAuth;
 import com.zhikou.code.dao.ShopDao;
+import com.zhikou.code.param.UserParam;
 import com.zhikou.code.service.AccountService;
 import com.zhikou.code.service.TokenService;
 import com.zhikou.code.service.UserService;
@@ -135,7 +136,7 @@ public class AccountController extends ApiBaseAction {
      * @date 2019/9/2 18:08
      */
     @PostMapping("/user/info")
-    public ResponseEntity getUserInfo(){
-        return ResponseEntity.ok(accountService.getUserInfo(getUserId()));
+    public ResponseEntity getUserInfo(@RequestBody UserParam param){
+        return ResponseEntity.ok(accountService.getUserInfo(param.getUserId()));
     }
 }

@@ -2,6 +2,7 @@ package com.zhikou.code.controller;
 
 import com.zhikou.code.commons.ApiBaseAction;
 import com.zhikou.code.param.FansParam;
+import com.zhikou.code.param.UserParam;
 import com.zhikou.code.service.FansService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +29,13 @@ public class FansController extends ApiBaseAction {
     }
 
     @PostMapping("/concern/list")
-    public ResponseEntity getConcernList(){
-        return ResponseEntity.ok(fansService.getConcernList(getUserId()));
+    public ResponseEntity getConcernList(@RequestBody UserParam param){
+        return ResponseEntity.ok(fansService.getConcernList(param.getUserId()));
     }
 
     @PostMapping("/fans/list")
-    public ResponseEntity getFansList(){
-        return ResponseEntity.ok(fansService.getFansList(getUserId()));
+    public ResponseEntity getFansList(@RequestBody UserParam param){
+        return ResponseEntity.ok(fansService.getFansList(param.getUserId()));
     }
 
     @PostMapping("/save")
