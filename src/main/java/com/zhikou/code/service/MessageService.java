@@ -353,7 +353,10 @@ public class MessageService {
         HashMap map = new HashMap();
         //处理商家状态
         Shop shop = new Shop();
-        shop.setUserId(userId);
+        Message message = new Message();
+        message.setMessageId(messageId);
+        Message messageOne = messageDao.selectOne(message);
+        shop.setUserId(messageOne.getUserId());
         Shop shopOne = shopDao.selectOne(shop);
         if (shopOne == null) {
             map.put("shopStatus", 1);//不是商家
