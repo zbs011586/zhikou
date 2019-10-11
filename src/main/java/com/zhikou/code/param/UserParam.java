@@ -17,4 +17,6 @@ public class UserParam {
 
     private int myUserId;
 
+    private String inputText;
+
 }

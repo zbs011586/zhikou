@@ -97,4 +97,11 @@ public class MessageController extends ApiBaseAction {
     public ResponseEntity latelyMessage(@RequestBody UserParam param){
         return ResponseEntity.ok(messageService.latelyMessage(param.getMyUserId(),param.getGoalUserId(),param.getPageNum(),param.getPageSize()));
     }
+
+    @IgnoreAuth
+    @PostMapping("/search/record")
+    public ResponseEntity searchRecord(@RequestBody UserParam param){
+        return ResponseEntity.ok(messageService.saveSearchRecord(param.getMyUserId(),param.getInputText()));
+    }
+
 }

@@ -46,6 +46,9 @@ public class MessageService {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private SearchRecordDao searchRecordDao;
+
     public HttpResponse latelyMessage(int myUserId,int goalUserId,int pageNum,int pageSize){
         PageHelper.startPage(pageNum,pageSize);
         List<Message> messages = messageDao.latelyMessage(goalUserId);
@@ -96,9 +99,6 @@ public class MessageService {
                     double distance = geo.calcDistance(geo.makePoint(lon, lat), geo.makePoint(shopLon, shopLat)) * DistanceUtils.DEG_TO_KM;
                     shop.setDistance(distance);
                 }
-            }
-            if (inputText !=null || !inputText.isEmpty()){
-                //记录关键词搜索历史和用户搜索记录
             }
             return HttpResponse.OK(new PageInfo(shops));
         }
@@ -390,7 +390,12 @@ public class MessageService {
         return map;
     }
 
-    private void saveSearchRecord(int userId,String inputText){
-
+    public  HttpResponse saveSearchRecord(int myUserId,String inputText){
+        SearchRecord searchRecord = new SearchRecord();
+        searchRecord.setUserId(myUserId);
+        searchRecord.setInputText(inputText);
+        searchRecord.setCreateTime(new Date());
+        searchRecordDao.insert(searchRecord);
+        return HttpResponse.OK("搜索记录保存成功");
     }
 }

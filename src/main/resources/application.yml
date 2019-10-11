@@ -4,12 +4,13 @@ server:
     max-threads: 1000
     max-connections: 10000
     accept-count: 100
+
+spring:
   servlet:
     multipart:
       enabled: true
       max-file-size: 20MB
       max-request-size: 200MB
-spring:
   application:
     name: zhikou
   datasource:
