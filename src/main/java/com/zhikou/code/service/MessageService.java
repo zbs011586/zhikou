@@ -6,6 +6,7 @@ import com.spatial4j.core.context.SpatialContext;
 import com.spatial4j.core.distance.DistanceUtils;
 import com.spatial4j.core.shape.Rectangle;
 import com.zhikou.code.bean.*;
+import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.dao.*;
 import com.zhikou.code.param.MessageParam;
@@ -397,5 +398,15 @@ public class MessageService {
         searchRecord.setCreateTime(new Date());
         searchRecordDao.insert(searchRecord);
         return HttpResponse.OK("搜索记录保存成功");
+    }
+
+    public HttpResponse mySearch(int userId){
+        List<String> mySearch = searchRecordDao.mySearch(userId);
+        return HttpResponse.OK(mySearch);
+    }
+
+    public HttpResponse hotSearch(){
+        List<String> hotSearch = searchRecordDao.hotSearch();
+        return HttpResponse.OK(hotSearch);
     }
 }

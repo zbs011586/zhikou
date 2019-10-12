@@ -104,4 +104,15 @@ public class MessageController extends ApiBaseAction {
         return ResponseEntity.ok(messageService.saveSearchRecord(param.getMyUserId(),param.getInputText()));
     }
 
+    @PostMapping("/my/search")
+    public ResponseEntity mySearch(){
+        return ResponseEntity.ok(messageService.mySearch(getUserId()));
+    }
+
+    @IgnoreAuth
+    @PostMapping("/hot/search")
+    public ResponseEntity hotSearch(){
+        return ResponseEntity.ok(messageService.hotSearch());
+    }
+
 }
