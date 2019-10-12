@@ -238,7 +238,7 @@ public class MessageService {
         Message message = new Message();
         message.setUserId(userId);
         User user = getUser(userId);
-        message.setUserName(user.getUsername());
+        message.setUserName(user.getNickname());
         message.setAvatar(user.getAvatar());
         message.setTitle(param.getTitle());
         message.setContent(param.getContent());
