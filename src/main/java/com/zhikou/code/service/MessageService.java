@@ -220,7 +220,12 @@ public class MessageService {
 
     public HttpResponse newMessage(double lon,double lat,int adcode, int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Message> messages = messageDao.newMessage(adcode);
+        List<Message> messages = null;
+        if (adcode == 0){
+             messages = messageDao.tianjinMessage();
+        }else {
+             messages = messageDao.newMessage(adcode);
+        }
         List<Message> list = handleMessage(messages, userId);
         //计算距离
         if (list.size() !=0){

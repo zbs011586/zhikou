@@ -10,6 +10,15 @@
         order by create_time desc
     </select>
 
+    <select id="tianjinMessage" resultType="message">
+        select message_id as messageId,user_id as userId,user_name as userName,
+        province,city,district,address,adcode,classify,lon,lat,
+        avatar,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
+        from t_message where adcode in
+        (120101,120102,120103,120104,120105,120106,120116,120110,120111,120112,120113,120114,120115,120117,120118,120119)
+        order by create_time desc
+    </select>
+
     <select id="myLikeMessage" resultType="message" parameterType="INTEGER">
         select t1.message_id as messageId,t1.user_id as userId,t1.user_name as userName,t1.avatar,
         t1.province,t1.city,t1.district,t1.address,t1.adcode,t1.classify,

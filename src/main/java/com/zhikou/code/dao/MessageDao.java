@@ -12,6 +12,8 @@ public interface MessageDao extends Mapper<Message> {
 
     List<Message> newMessage(@Param("adcode")int adcode);
 
+    List<Message> tianjinMessage();
+
     List<Message> myLikeMessage(@Param("userId") int userId);
 
     List<Message> myScanMessage(@Param("userId") int userId);
