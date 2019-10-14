@@ -1,5 +1,6 @@
 package com.zhikou.code.service;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.spatial4j.core.context.SpatialContext;
@@ -49,6 +50,19 @@ public class MessageService {
 
     @Autowired
     private SearchRecordDao searchRecordDao;
+
+    @Autowired
+    private NoticeDao noticeDao;
+
+
+    public HttpResponse getNotice(){
+        Notice notice = noticeDao.getNotice();
+        if (notice == null){
+            return HttpResponse.ERROR(Constants.ErrorCode.REQUEST_ERROR,"没有通知内容");
+        }else {
+            return HttpResponse.OK(notice);
+        }
+    }
 
     public HttpResponse latelyMessage(int myUserId,int goalUserId,int pageNum,int pageSize){
         PageHelper.startPage(pageNum,pageSize);

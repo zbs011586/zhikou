@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/message")
 public class MessageController extends ApiBaseAction {
@@ -115,4 +116,9 @@ public class MessageController extends ApiBaseAction {
         return ResponseEntity.ok(messageService.hotSearch());
     }
 
+    @IgnoreAuth
+    @PostMapping("/notice")
+    public ResponseEntity getNotice(){
+        return ResponseEntity.ok(messageService.getNotice());
+    }
 }
