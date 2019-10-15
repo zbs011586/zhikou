@@ -121,4 +121,10 @@ public class MessageController extends ApiBaseAction {
     public ResponseEntity getNotice(){
         return ResponseEntity.ok(messageService.getNotice());
     }
+
+    @IgnoreAuth
+    @PostMapping("/image")
+    public ResponseEntity getImage(){
+        return ResponseEntity.ok(messageService.getImage());
+    }
 }

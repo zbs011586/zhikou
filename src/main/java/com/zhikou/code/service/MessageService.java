@@ -54,6 +54,13 @@ public class MessageService {
     @Autowired
     private NoticeDao noticeDao;
 
+    @Autowired
+    private ImageDao imageDao;
+
+    public HttpResponse getImage(){
+        List<Image> images = imageDao.getImage();
+        return HttpResponse.OK(images);
+    }
 
     public HttpResponse getNotice(){
         Notice notice = noticeDao.getNotice();
