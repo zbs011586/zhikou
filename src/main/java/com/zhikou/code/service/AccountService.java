@@ -25,7 +25,7 @@ public class AccountService {
     private UserDao userDao;
 
 
-    public HttpResponse getUserInfo(int userId){
+    public HttpResponse  getUserInfo(int userId){
         User user = new User();
         user.setUserId(userId);
         User one = userDao.selectOne(user);

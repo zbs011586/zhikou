@@ -167,9 +167,8 @@ public class MessageService {
             Message message = new Message();
             message.setMessageId(messageId);
             Message one = messageDao.selectOne(message);
-            User user = getUser(userId);
             userWarn.setUserId(userId);
-            userWarn.setUserName(user.getUsername());
+            userWarn.setUserName(getUserName(userId));
             userWarn.setMessageId(messageId);
             userWarn.setWarnTime(one.getStartTime());
             userWarn.setCreateTime(new Date());
@@ -212,8 +211,7 @@ public class MessageService {
     }
 
     public HttpResponse saveComment(int messageId, int userId, String content) {
-        User user = getUser(userId);
-        UserComment userComment = new UserComment(messageId, userId, user.getUsername(), content, new Date());
+        UserComment userComment = new UserComment(messageId, userId,getUserName(userId), content, new Date());
         userCommentDao.insert(userComment);
         return HttpResponse.OK("评论成功");
     }
@@ -224,11 +222,10 @@ public class MessageService {
      * @date 2019/9/19 21:32
      */
     public HttpResponse saveLike(int messageId, int userId, int type) {
-        User user = getUser(userId);
         UserLike userLike = new UserLike();
         userLike.setMessageId(messageId);
         userLike.setUserId(userId);
-        userLike.setUserName(user.getUsername());
+        userLike.setUserName(getUserName(userId));
         if (type == 1) {
             userLikeDao.delete(userLike);
         } else {
@@ -269,9 +266,11 @@ public class MessageService {
 
         if (param.getAdcode() != 0) {
             //不是商家
-            User user = getUser(userId);
-            message.setUserName(user.getNickname());
-            message.setAvatar(user.getAvatar());
+            User user = new User();
+            user.setUserId(userId);
+            User one = userDao.selectOne(user);
+            message.setUserName(one.getNickname());
+            message.setAvatar(one.getAvatar());
 
             message.setAdcode(param.getAdcode());
             message.setClassify(param.getClassify());
@@ -307,18 +306,6 @@ public class MessageService {
     }
 
     /**
-     * @description 根据userId获取user对象
-     * @author 张宝帅
-     * @date 2019/9/20 19:52
-     */
-    private User getUser(int userId) {
-        User user = new User();
-        user.setUserId(userId);
-        User one = userDao.selectOne(user);
-        return one;
-    }
-
-    /**
      * @description 入库 用户浏览记录
      * @author 张宝帅
      * @date 2019/9/20 19:40
@@ -330,8 +317,7 @@ public class MessageService {
         UserScan one = userScanDao.selectOne(userScan);
         if (one == null) {
             //新消息入库
-            User user = getUser(userId);
-            userScan.setUserName(user.getUsername());
+            userScan.setUserName(getUserName(userId));
             userScan.setUpdateTime(new Date());
             userScanDao.insert(userScan);
         } else {
@@ -415,6 +401,25 @@ public class MessageService {
     public HttpResponse hotSearch(){
         List<String> hotSearch = searchRecordDao.hotSearch();
         return HttpResponse.OK(hotSearch);
+    }
+
+    private String getUserName(int userId){
+        Shop param = new Shop();
+        param.setUserId(userId);
+        Shop shop = shopDao.selectOne(param);
+        if (shop == null){
+            User user = new User();
+            user.setUserId(userId);
+            User one = userDao.selectOne(user);
+            if (one != null){
+                return one.getUsername();
+            }else {
+                return null;
+            }
+
+        }else {
+            return shop.getShopName();
+        }
     }
 
     private int  getAdcode(double lon,double lat){
