@@ -12,6 +12,7 @@ import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.dao.*;
 import com.zhikou.code.param.MessageParam;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -168,7 +169,7 @@ public class MessageService {
             message.setMessageId(messageId);
             Message one = messageDao.selectOne(message);
             userWarn.setUserId(userId);
-            userWarn.setUserName(getUserName(userId));
+            userWarn.setUserName(MapUtils.getString(getUserNameAndAvatar(userId),"userName"));
             userWarn.setMessageId(messageId);
             userWarn.setWarnTime(one.getStartTime());
             userWarn.setCreateTime(new Date());
@@ -211,7 +212,13 @@ public class MessageService {
     }
 
     public HttpResponse saveComment(int messageId, int userId, String content) {
-        UserComment userComment = new UserComment(messageId, userId,getUserName(userId), content, new Date());
+        UserComment userComment = new UserComment();
+        userComment.setMessageId(messageId);
+        userComment.setContent(content);
+        userComment.setUserId(userId);
+        userComment.setUserName(MapUtils.getString(getUserNameAndAvatar(userId),"userName"));
+        userComment.setCreateTime(new Date());
+        userComment.setAvatar(MapUtils.getString(getUserNameAndAvatar(userId),"avatar"));
         userCommentDao.insert(userComment);
         return HttpResponse.OK("评论成功");
     }
@@ -225,7 +232,7 @@ public class MessageService {
         UserLike userLike = new UserLike();
         userLike.setMessageId(messageId);
         userLike.setUserId(userId);
-        userLike.setUserName(getUserName(userId));
+        userLike.setUserName(MapUtils.getString(getUserNameAndAvatar(userId),"userName"));
         if (type == 1) {
             userLikeDao.delete(userLike);
         } else {
@@ -317,7 +324,7 @@ public class MessageService {
         UserScan one = userScanDao.selectOne(userScan);
         if (one == null) {
             //新消息入库
-            userScan.setUserName(getUserName(userId));
+            userScan.setUserName(MapUtils.getString(getUserNameAndAvatar(userId),"userName"));
             userScan.setUpdateTime(new Date());
             userScanDao.insert(userScan);
         } else {
@@ -403,7 +410,8 @@ public class MessageService {
         return HttpResponse.OK(hotSearch);
     }
 
-    private String getUserName(int userId){
+    private Map getUserNameAndAvatar(int userId){
+        HashMap map = new HashMap();
         Shop param = new Shop();
         param.setUserId(userId);
         Shop shop = shopDao.selectOne(param);
@@ -412,14 +420,18 @@ public class MessageService {
             user.setUserId(userId);
             User one = userDao.selectOne(user);
             if (one != null){
-                return one.getUsername();
+                map.put("userName",one.getUsername());
+                map.put("avatar",one.getAvatar());
             }else {
-                return null;
+                map.put("userName",null);
+                map.put("avatar",null);
             }
 
         }else {
-            return shop.getShopName();
+            map.put("userName",shop.getShopName());
+            map.put("avatar",shop.getShopPhoto());
         }
+        return map;
     }
 
     private int  getAdcode(double lon,double lat){
