@@ -1,6 +1,7 @@
 package com.zhikou.code.service;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.spatial4j.core.context.SpatialContext;
@@ -12,8 +13,9 @@ import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.dao.*;
 import com.zhikou.code.param.MessageParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -44,9 +46,6 @@ public class MessageService {
 
     @Autowired
     private AdviceDao adviceDao;
-
-    @Autowired
-    private AccountService accountService;
 
     @Autowired
     private SearchRecordDao searchRecordDao;
@@ -264,25 +263,22 @@ public class MessageService {
     public HttpResponse createMessage(MessageParam param, Integer userId) {
         Message message = new Message();
         message.setUserId(userId);
-        User user = getUser(userId);
-        message.setUserName(user.getNickname());
-        message.setAvatar(user.getAvatar());
         message.setTitle(param.getTitle());
         message.setContent(param.getContent());
+        message.setAdcode(param.getAdcode());
+
         if (param.getAdcode() != 0) {
+            //不是商家
+            User user = getUser(userId);
+            message.setUserName(user.getNickname());
+            message.setAvatar(user.getAvatar());
+
             message.setAdcode(param.getAdcode());
-            message.setProvince(param.getProvince());
-            message.setCity(param.getCity());
-            message.setDistrict(param.getDistrict());
-            message.setAddress(param.getAddress());
             message.setClassify(param.getClassify());
-            //获取经纬度
-            String location = accountService.getLocation(param.getProvince() + param.getCity() + param.getDistrict() + param.getAddress());
-            String[] lonLat = StringUtils.split(location, ",");
-            Double lon = Double.valueOf(lonLat[0]);
-            Double lat = Double.valueOf(lonLat[1]);
-            message.setLon(lon);
-            message.setLat(lat);
+            message.setLon(param.getLon());
+            message.setLat(param.getLat());
+            message.setShopStatus(1);
+
         } else {
             //从shop表中获取当前商家信息的adcode
             Shop shop = new Shop();
@@ -296,6 +292,10 @@ public class MessageService {
             message.setClassify(one.getClassify());
             message.setLon(one.getLon());
             message.setLat(one.getLon());
+            message.setUserName(one.getShopName());
+            message.setShopStatus(0);
+            message.setAvatar(one.getShopPhoto());
+
         }
         message.setRebate(param.getRebate());
         message.setStartTime(param.getStartTime());
@@ -347,13 +347,10 @@ public class MessageService {
      */
     private List<Message> handleMessage(List<Message> messages, int userId) {
         for (Message message : messages) {
-            //处理三种状态
+            //处理二种状态
             Map<String, Object> map = handleStatus(message.getMessageId(), userId);
-            message.setShopStatus((Integer) map.get("shopStatus"));
             message.setLikeStatus((Integer) map.get("likeStatus"));
             message.setWarnStatus((Integer) map.get("warnStatus"));
-            message.setShopName((String) map.get("shopName"));
-            message.setShopPhoto((String) map.get("shopPhoto"));
             //处理filePath
             String filePath = message.getFilePath();
             if (filePath != null && !"".equals(filePath)) {
@@ -378,22 +375,6 @@ public class MessageService {
      */
     private Map<String, Object> handleStatus(int messageId, int userId) {
         HashMap map = new HashMap();
-        //处理商家状态
-        Shop shop = new Shop();
-        Message message = new Message();
-        message.setMessageId(messageId);
-        Message messageOne = messageDao.selectOne(message);
-        shop.setUserId(messageOne.getUserId());
-        Shop shopOne = shopDao.selectOne(shop);
-        if (shopOne == null) {
-            map.put("shopStatus", 1);//不是商家
-            map.put("shopName",null);
-            map.put("shopPhoto",null);
-        } else {
-            map.put("shopStatus", 0);//是商家
-            map.put("shopName",shopOne.getShopName());
-            map.put("shopPhoto",shopOne.getShopPhoto());
-        }
         //处理点赞状态
         UserLike userLike = new UserLike();
         userLike.setMessageId(messageId);
@@ -434,5 +415,16 @@ public class MessageService {
     public HttpResponse hotSearch(){
         List<String> hotSearch = searchRecordDao.hotSearch();
         return HttpResponse.OK(hotSearch);
+    }
+
+    private int  getAdcode(double lon,double lat){
+        //调用高德api的逆地理编码接口 根据经纬度 获取当前用户的地址信息。提取adcode
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<String> responseEntity = template.getForEntity("https://restapi.amap.com/v3/geocode/regeo?key=ebe1b5a862d0ffac954af5cfc9261d06&location="+lon+","+lat+"&poitype=&radius=&extensions=all&batch=false&roadlevel=0", String.class);
+        JSONObject jsonObject = JSON.parseObject(responseEntity.getBody());
+        JSONObject regeocode = jsonObject.getJSONObject("regeocode");
+        JSONObject addressComponent = regeocode.getJSONObject("addressComponent");
+        String adcode = addressComponent.getString("adcode");
+        return Integer.valueOf(adcode);
     }
 }

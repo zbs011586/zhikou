@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @description 促销活动信息表
@@ -29,12 +28,6 @@ public class Message {
 
     private String userName;
 
-    @Transient
-    private String shopName;
-
-    @Transient
-    private String shopPhoto;
-
     private String avatar;
 
     private String title;
@@ -54,6 +47,8 @@ public class Message {
     private Double lat;
 
     private Integer adcode;//消息所属行政区域
+
+    private Integer shopStatus;
 
     @Transient
     private double distance;
@@ -75,9 +70,6 @@ public class Message {
 
     @Transient
     private int likeStatus;
-
-    @Transient
-    private int shopStatus;
 
     @Transient
     private int warnStatus;

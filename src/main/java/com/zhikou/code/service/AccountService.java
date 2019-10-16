@@ -76,4 +76,5 @@ public class AccountService {
         String location = jsonObject.getJSONArray("geocodes").getJSONObject(0).getString("location");
         return location;
     }
+
 }
