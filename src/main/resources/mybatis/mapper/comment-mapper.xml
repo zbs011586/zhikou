@@ -3,7 +3,7 @@
 <mapper namespace="com.zhikou.code.dao.UserCommentDao">
 
     <select id="commentUser" resultType="comment" parameterType="INTEGER">
-        select message_id as messageId,user_id as userId,user_name as userName,content,create_time as createTime
+        select message_id as messageId,avatar,user_id as userId,user_name as userName,content,create_time as createTime
         from t_user_comment where message_id=#{messageId}
         order by create_time asc
     </select>
