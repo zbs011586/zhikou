@@ -140,4 +140,9 @@ public class AccountController extends ApiBaseAction {
     public ResponseEntity getUserInfo(@RequestBody UserParam param){
         return ResponseEntity.ok(accountService.getUserInfo(param.getGoalUserId()));
     }
+
+    @PostMapping("/token/check")
+    public ResponseEntity tokenCheck(@RequestBody UserParam param){
+        return ResponseEntity.ok(accountService.tokenCheck(param.getToken()));
+    }
 }

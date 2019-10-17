@@ -3,10 +3,12 @@ package com.zhikou.code.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhikou.code.bean.Shop;
+import com.zhikou.code.bean.Token;
 import com.zhikou.code.bean.User;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.dao.ShopDao;
+import com.zhikou.code.dao.TokenDao;
 import com.zhikou.code.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ public class AccountService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private TokenDao tokenDao;
 
     public HttpResponse  getUserInfo(int userId){
         User user = new User();
@@ -67,6 +71,20 @@ public class AccountService {
         userDao.updateRole(userId,1);
         return HttpResponse.OK("入驻成功");
     }
+
+    public HttpResponse tokenCheck(String token){
+        Token param = new Token();
+        param.setToken(token);
+        Token tokenOne = tokenDao.selectOne(param);
+        if (tokenOne == null){
+            return HttpResponse.ERROR(Constants.ErrorCode.TOKEN_ERROR,"token不存在");
+        }else {
+            HashMap map = new HashMap();
+            map.put("userId",tokenOne.getUserId());
+            return HttpResponse.OK(map);
+        }
+    }
+
 
     public String getLocation(String address){
         //调用高德api的逆地理编码接口 获取商家地址的经纬度信息

@@ -19,4 +19,6 @@ public class UserParam {
 
     private String inputText;
 
+    private String token;
+
 }
