@@ -297,7 +297,7 @@ public class MessageService {
             message.setAddress(one.getAddress());
             message.setClassify(one.getClassify());
             message.setLon(one.getLon());
-            message.setLat(one.getLon());
+            message.setLat(one.getLat());
             message.setUserName(one.getShopName());
             message.setShopStatus(0);
             message.setAvatar(one.getShopPhoto());
