@@ -79,11 +79,11 @@ public class AccountController extends ApiBaseAction {
         if (null == sessionData || StringUtils.isNullOrEmpty(sessionData.getString("openid"))) {
             return ResponseEntity.ok(HttpResponse.ERROR(Constants.ErrorCode.LOGIN_ERROR,"登录失败：无法获取用户openid"));
         }
-        //验证用户信息完整性
+        /*//验证用户信息完整性
         String sha1 = CommonUtil.getSha1(fullUserInfo.getRawData() + sessionData.getString("session_key"));
         if (!fullUserInfo.getSignature().equals(sha1)) {
             return ResponseEntity.ok(HttpResponse.ERROR(Constants.ErrorCode.LOGIN_ERROR,"登录失败：用户登录信息不完整"));
-        }
+        }*/
         Date nowTime = new Date();
         User user = userService.queryByOpenId(sessionData.getString("openid"));
         if (null == user) {
