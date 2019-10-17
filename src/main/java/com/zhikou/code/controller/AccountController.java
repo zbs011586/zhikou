@@ -141,6 +141,7 @@ public class AccountController extends ApiBaseAction {
         return ResponseEntity.ok(accountService.getUserInfo(param.getGoalUserId()));
     }
 
+    @IgnoreAuth
     @PostMapping("/token/check")
     public ResponseEntity tokenCheck(@RequestBody UserParam param){
         return ResponseEntity.ok(accountService.tokenCheck(param.getToken()));
