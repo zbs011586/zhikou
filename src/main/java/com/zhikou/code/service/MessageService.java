@@ -420,7 +420,7 @@ public class MessageService {
             user.setUserId(userId);
             User one = userDao.selectOne(user);
             if (one != null){
-                map.put("userName",one.getUsername());
+                map.put("userName",one.getNickname());
                 map.put("avatar",one.getAvatar());
             }else {
                 map.put("userName",null);
