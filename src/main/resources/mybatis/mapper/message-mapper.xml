@@ -90,10 +90,10 @@
             </if>
         </where>
         <if test="rebateOrder ==0">
-            order by rebate desc
+            order by rebate desc,create_time desc
         </if>
         <if test="rebateOrder ==1">
-            order by rebate asc
+            order by rebate asc,create_time desc
         </if>
     </select>
 
