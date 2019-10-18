@@ -18,8 +18,17 @@
         <if test="minLon != 0 and maxLon !=0 and minLat !=0 and maxLat !=0">
             and (t1.lon between #{minLon} and #{maxLon}) and (t1.lat between #{minLat} and #{maxLat})
         </if>
-        and t1.adcode=#{adcode}
+        <if test="adcode != 0 ">
+            and adcode=#{adcode}
+        </if>
+        <if test="adcode == 0">
+            and adcode in (120000,120101,120102,120103,120104,120105,120106,120116,120110,120111,120112,120113,120114,120115,120117,120118,120119)
+        </if>
     </where>
+    </select>
+
+    <select id="queryByUserId" parameterType="Integer" resultType="HashMap">
+        select shop_name as shopName,shop_photo as shopPhoto,province,city,district,address,classify,description,create_time as createTime
     </select>
 
 </mapper>

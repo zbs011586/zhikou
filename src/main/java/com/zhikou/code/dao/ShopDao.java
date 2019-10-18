@@ -5,10 +5,13 @@ import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ShopDao extends Mapper<Shop> {
 
     List<Shop> shopData(@Param("adcode")int adcode, @Param("classify")String classify, @Param("inputText")String inputText,
                               @Param("minLon")double minLon, @Param("maxLon")double maxLon,
                               @Param("minLat")double minLat, @Param("maxLat")double maxLat);
+
+    Map<String,Object> queryByUserId(@Param("userId")int userId);
 }

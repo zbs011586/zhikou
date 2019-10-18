@@ -5,6 +5,7 @@ import com.zhikou.code.bean.User;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.dao.FansDao;
+import com.zhikou.code.dao.ShopDao;
 import com.zhikou.code.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,10 @@ public class FansService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private ShopDao shopDao;
+
 
     public HttpResponse isFans(int concernUserUd, int fansUserId) {
         Fans param = new Fans();
@@ -90,7 +95,8 @@ public class FansService {
             if (0 == (int) map.get("role")) {
                 users.add(map);
             } else {
-                shops.add(map);
+                Map<String, Object> shop = shopDao.queryByUserId((int) map.get("userId"));
+                shops.add(shop);
             }
         }
         Map map = new HashMap();
