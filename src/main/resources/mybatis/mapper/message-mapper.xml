@@ -6,16 +6,15 @@
         select message_id as messageId,user_id as userId,user_name as userName,
         province,city,district,address,adcode,classify,lon,lat,shop_status as shopStatus,
         avatar,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
-        from t_message where adcode=#{adcode}
-        order by create_time desc
-    </select>
-
-    <select id="tianjinMessage" resultType="message">
-        select message_id as messageId,user_id as userId,user_name as userName,
-        province,city,district,address,adcode,classify,lon,lat,shop_status as shopStatus,
-        avatar,title,content,rebate,file_path as filePath,create_time as createTime,start_time as startTime
-        from t_message where adcode in
-        (120000,120101,120102,120103,120104,120105,120106,120116,120110,120111,120112,120113,120114,120115,120117,120118,120119)
+        from t_message
+        <where>
+            <if test="adcode != 0 ">
+                adcode=#{adcode}
+            </if>
+            <if test="adcode == 0">
+                and adcode in (120000,120101,120102,120103,120104,120105,120106,120116,120110,120111,120112,120113,120114,120115,120117,120118,120119)
+            </if>
+        </where>
         order by create_time desc
     </select>
 

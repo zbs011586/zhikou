@@ -57,29 +57,29 @@ public class MessageService {
     @Autowired
     private ImageDao imageDao;
 
-    public HttpResponse getImage(){
+    public HttpResponse getImage() {
         List<Image> images = imageDao.getImage();
         return HttpResponse.OK(images);
     }
 
-    public HttpResponse getNotice(){
+    public HttpResponse getNotice() {
         Notice notice = noticeDao.getNotice();
-        if (notice == null){
-            return HttpResponse.ERROR(Constants.ErrorCode.REQUEST_ERROR,"没有通知内容");
-        }else {
+        if (notice == null) {
+            return HttpResponse.ERROR(Constants.ErrorCode.REQUEST_ERROR, "没有通知内容");
+        } else {
             return HttpResponse.OK(notice);
         }
     }
 
-    public HttpResponse latelyMessage(int myUserId,int goalUserId,int pageNum,int pageSize){
-        PageHelper.startPage(pageNum,pageSize);
+    public HttpResponse latelyMessage(int myUserId, int goalUserId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.latelyMessage(goalUserId);
         List<Message> list = handleMessage(messages, myUserId);
         return HttpResponse.OK(new PageInfo(list));
     }
 
-    public HttpResponse messageData(int userId,int type, int adcode, String classify, String inputText,
-                                    int rebateOrder, double lon, double lat, int radius,int pageNum,int pageSize) {
+    public HttpResponse messageData(int userId, int type, int adcode, String classify, String inputText,
+                                    int rebateOrder, double lon, double lat, int radius, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         double minLon = 0d;
         double maxLon = 0d;
@@ -95,28 +95,28 @@ public class MessageService {
             maxLat = rectangle.getMaxY();
         }
 
-        if (type == 0){
+        if (type == 0) {
             //查询消息
             List<Message> messages = messageDao.messageData(adcode, classify, inputText, rebateOrder, minLon, maxLon, minLat, maxLat);
             List<Message> list = handleMessage(messages, userId);
             //计算距离
-            if (list.size() !=0){
+            if (list.size() != 0) {
                 for (Message message : list) {
-                    double messageLon =message.getLon();
-                    double messageLat =message.getLat();
+                    double messageLon = message.getLon();
+                    double messageLat = message.getLat();
                     SpatialContext geo = SpatialContext.GEO;
                     double distance = geo.calcDistance(geo.makePoint(lon, lat), geo.makePoint(messageLon, messageLat)) * DistanceUtils.DEG_TO_KM;
                     message.setDistance(distance);
                 }
             }
             return HttpResponse.OK(new PageInfo(list));
-        }else {
+        } else {
             //查询商家
             List<Shop> shops = shopDao.shopData(adcode, classify, inputText, minLon, maxLon, minLat, maxLat);
-            if (shops.size() !=0){
+            if (shops.size() != 0) {
                 for (Shop shop : shops) {
-                    double shopLon =shop.getLon();
-                    double shopLat =shop.getLat();
+                    double shopLon = shop.getLon();
+                    double shopLat = shop.getLat();
                     SpatialContext geo = SpatialContext.GEO;
                     double distance = geo.calcDistance(geo.makePoint(lon, lat), geo.makePoint(shopLon, shopLat)) * DistanceUtils.DEG_TO_KM;
                     shop.setDistance(distance);
@@ -137,7 +137,7 @@ public class MessageService {
 
     public HttpResponse warnInfo(Date warnTime, int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Message> messages = messageDao.warnInfo(warnTime,userId);
+        List<Message> messages = messageDao.warnInfo(warnTime, userId);
         List<Message> list = handleMessage(messages, userId);
         return HttpResponse.OK(new PageInfo(list));
     }
@@ -169,7 +169,7 @@ public class MessageService {
             message.setMessageId(messageId);
             Message one = messageDao.selectOne(message);
             userWarn.setUserId(userId);
-            userWarn.setUserName(MapUtils.getString(getUserNameAndAvatar(userId),"userName"));
+            userWarn.setUserName(MapUtils.getString(getUserNameAndAvatar(userId), "userName"));
             userWarn.setMessageId(messageId);
             userWarn.setWarnTime(one.getStartTime());
             userWarn.setCreateTime(new Date());
@@ -216,9 +216,9 @@ public class MessageService {
         userComment.setMessageId(messageId);
         userComment.setContent(content);
         userComment.setUserId(userId);
-        userComment.setUserName(MapUtils.getString(getUserNameAndAvatar(userId),"userName"));
+        userComment.setUserName(MapUtils.getString(getUserNameAndAvatar(userId), "userName"));
         userComment.setCreateTime(new Date());
-        userComment.setAvatar(MapUtils.getString(getUserNameAndAvatar(userId),"avatar"));
+        userComment.setAvatar(MapUtils.getString(getUserNameAndAvatar(userId), "avatar"));
         userCommentDao.insert(userComment);
         return HttpResponse.OK("评论成功");
     }
@@ -232,7 +232,7 @@ public class MessageService {
         UserLike userLike = new UserLike();
         userLike.setMessageId(messageId);
         userLike.setUserId(userId);
-        userLike.setUserName(MapUtils.getString(getUserNameAndAvatar(userId),"userName"));
+        userLike.setUserName(MapUtils.getString(getUserNameAndAvatar(userId), "userName"));
         if (type == 1) {
             userLikeDao.delete(userLike);
         } else {
@@ -242,20 +242,15 @@ public class MessageService {
         return HttpResponse.OK("操作成功");
     }
 
-    public HttpResponse newMessage(double lon,double lat,int adcode, int userId, int pageNum, int pageSize) {
+    public HttpResponse newMessage(double lon, double lat, int adcode, int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Message> messages = null;
-        if (adcode == 0){
-             messages = messageDao.tianjinMessage();
-        }else {
-             messages = messageDao.newMessage(adcode);
-        }
+        List<Message> messages = messageDao.newMessage(adcode);
         List<Message> list = handleMessage(messages, userId);
         //计算距离
-        if (list.size() !=0){
+        if (list.size() != 0) {
             for (Message message : list) {
-                double messageLon =message.getLon();
-                double messageLat =message.getLat();
+                double messageLon = message.getLon();
+                double messageLat = message.getLat();
                 SpatialContext geo = SpatialContext.GEO;
                 double distance = geo.calcDistance(geo.makePoint(lon, lat), geo.makePoint(messageLon, messageLat)) * DistanceUtils.DEG_TO_KM;
                 message.setDistance(distance);
@@ -324,7 +319,7 @@ public class MessageService {
         UserScan one = userScanDao.selectOne(userScan);
         if (one == null) {
             //新消息入库
-            userScan.setUserName(MapUtils.getString(getUserNameAndAvatar(userId),"userName"));
+            userScan.setUserName(MapUtils.getString(getUserNameAndAvatar(userId), "userName"));
             userScan.setUpdateTime(new Date());
             userScanDao.insert(userScan);
         } else {
@@ -391,7 +386,7 @@ public class MessageService {
         return map;
     }
 
-    public  HttpResponse saveSearchRecord(int myUserId,String inputText){
+    public HttpResponse saveSearchRecord(int myUserId, String inputText) {
         SearchRecord searchRecord = new SearchRecord();
         searchRecord.setUserId(myUserId);
         searchRecord.setInputText(inputText);
@@ -400,44 +395,44 @@ public class MessageService {
         return HttpResponse.OK("搜索记录保存成功");
     }
 
-    public HttpResponse mySearch(int userId){
+    public HttpResponse mySearch(int userId) {
         List<String> mySearch = searchRecordDao.mySearch(userId);
         return HttpResponse.OK(mySearch);
     }
 
-    public HttpResponse hotSearch(){
+    public HttpResponse hotSearch() {
         List<String> hotSearch = searchRecordDao.hotSearch();
         return HttpResponse.OK(hotSearch);
     }
 
-    private Map getUserNameAndAvatar(int userId){
+    private Map getUserNameAndAvatar(int userId) {
         HashMap map = new HashMap();
         Shop param = new Shop();
         param.setUserId(userId);
         Shop shop = shopDao.selectOne(param);
-        if (shop == null){
+        if (shop == null) {
             User user = new User();
             user.setUserId(userId);
             User one = userDao.selectOne(user);
-            if (one != null){
-                map.put("userName",one.getNickname());
-                map.put("avatar",one.getAvatar());
-            }else {
-                map.put("userName",null);
-                map.put("avatar",null);
+            if (one != null) {
+                map.put("userName", one.getNickname());
+                map.put("avatar", one.getAvatar());
+            } else {
+                map.put("userName", null);
+                map.put("avatar", null);
             }
 
-        }else {
-            map.put("userName",shop.getShopName());
-            map.put("avatar",shop.getShopPhoto());
+        } else {
+            map.put("userName", shop.getShopName());
+            map.put("avatar", shop.getShopPhoto());
         }
         return map;
     }
 
-    private int  getAdcode(double lon,double lat){
+    private int getAdcode(double lon, double lat) {
         //调用高德api的逆地理编码接口 根据经纬度 获取当前用户的地址信息。提取adcode
         RestTemplate template = new RestTemplate();
-        ResponseEntity<String> responseEntity = template.getForEntity("https://restapi.amap.com/v3/geocode/regeo?key=ebe1b5a862d0ffac954af5cfc9261d06&location="+lon+","+lat+"&poitype=&radius=&extensions=all&batch=false&roadlevel=0", String.class);
+        ResponseEntity<String> responseEntity = template.getForEntity("https://restapi.amap.com/v3/geocode/regeo?key=ebe1b5a862d0ffac954af5cfc9261d06&location=" + lon + "," + lat + "&poitype=&radius=&extensions=all&batch=false&roadlevel=0", String.class);
         JSONObject jsonObject = JSON.parseObject(responseEntity.getBody());
         JSONObject regeocode = jsonObject.getJSONObject("regeocode");
         JSONObject addressComponent = regeocode.getJSONObject("addressComponent");
