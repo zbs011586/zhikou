@@ -4,7 +4,7 @@
 
     <select id="mySearch" parameterType="INTEGER" resultType="String">
         select input_text from t_search_record where user_id=#{userId}
-            order by create_time desc limit 10
+           group by input_text order by create_time desc limit 10
     </select>
 
     <select id="hotSearch" resultType="String">
