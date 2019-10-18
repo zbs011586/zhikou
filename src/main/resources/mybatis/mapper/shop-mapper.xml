@@ -28,7 +28,7 @@
     </select>
 
     <select id="queryByUserId" parameterType="Integer" resultType="HashMap">
-        select shop_name as shopName,shop_photo as shopPhoto,province,city,district,address,classify,description,create_time as createTime
+        select user_id as userId,shop_name as shopName,shop_photo as shopPhoto,province,city,district,address,classify,description,create_time as createTime
         from t_shop where user_id=#{userId}
     </select>
 
