@@ -127,4 +127,9 @@ public class MessageController extends ApiBaseAction {
     public ResponseEntity getImage(){
         return ResponseEntity.ok(messageService.getImage());
     }
+
+    @PostMapping("/del")
+    public ResponseEntity delMessage(@RequestBody MessageParam param){
+        return ResponseEntity.ok(messageService.delMessage(param.getMessageId()));
+    }
 }

@@ -57,6 +57,30 @@ public class MessageService {
     @Autowired
     private ImageDao imageDao;
 
+    public HttpResponse delMessage(int messageId){
+        Message message = new Message();
+        message.setMessageId(messageId);
+        messageDao.delete(message);
+
+        UserComment userComment = new UserComment();
+        userComment.setMessageId(messageId);
+        userCommentDao.delete(userComment);
+
+        UserLike userLike = new UserLike();
+        userLike.setMessageId(messageId);
+        userLikeDao.delete(userLike);
+
+        UserScan userScan = new UserScan();
+        userScan.setMessageId(messageId);
+        userScanDao.delete(userScan);
+
+        UserWarn userWarn = new UserWarn();
+        userWarn.setMessageId(messageId);
+        userWarnDao.delete(userWarn);
+
+        return HttpResponse.OK("删除成功");
+    }
+
     public HttpResponse getImage() {
         List<Image> images = imageDao.getImage();
         return HttpResponse.OK(images);
