@@ -57,6 +57,16 @@ public class MessageService {
     @Autowired
     private ImageDao imageDao;
 
+    @Autowired
+    private QuestionDao questionDao;
+
+
+
+    public HttpResponse questionList(){
+        List<Question> questions = questionDao.selectAll();
+        return HttpResponse.OK(questions);
+    }
+
     public HttpResponse delMessage(int messageId){
         Message message = new Message();
         message.setMessageId(messageId);

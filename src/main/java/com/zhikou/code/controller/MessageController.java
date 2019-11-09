@@ -132,4 +132,9 @@ public class MessageController extends ApiBaseAction {
     public ResponseEntity delMessage(@RequestBody MessageParam param){
         return ResponseEntity.ok(messageService.delMessage(param.getMessageId()));
     }
+
+    @PostMapping("/question/list")
+    public ResponseEntity questionList(){
+        return ResponseEntity.ok(messageService.questionList());
+    }
 }
