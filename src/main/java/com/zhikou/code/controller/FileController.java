@@ -33,16 +33,6 @@ public class FileController extends ApiBaseAction {
     public ResponseEntity fileUpload(HttpServletRequest request) throws Exception {
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = req.getFiles("file");
-        /*先进行图片鉴黄*/
-        for (int i = 0; i < files.size(); i++) {
-            MultipartFile file = files.get(i);
-            boolean b = imgCheck(file);
-            if (!b){
-                HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" +(i+1)+ "张图片不合法");
-                return ResponseEntity.ok(response);
-            }
-        }
-
         String urls = "";
         if (files !=null && files.size()>0){
             for (MultipartFile file : files) {
@@ -70,6 +60,16 @@ public class FileController extends ApiBaseAction {
                 String url = "https://www.zhiko.store/api/image/"+getUserId()+"/"+newFileName;
                 urls += url +",";
             }
+            /*先进行图片鉴黄*/
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                boolean b = imgCheck(file);
+                if (!b){
+                    HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" +(i+1)+ "张图片不合法");
+                    return ResponseEntity.ok(response);
+                }
+            }
+
             HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls.substring(0,urls.length() - 1));
             return ResponseEntity.ok(response);
         }else {
