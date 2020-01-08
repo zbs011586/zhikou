@@ -33,16 +33,19 @@ public class FileController extends ApiBaseAction {
     public ResponseEntity fileUpload(HttpServletRequest request) throws Exception {
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = req.getFiles("file");
+        /*先进行图片鉴黄*/
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            boolean b = imgCheck(file);
+            if (!b){
+                HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" +(i+1)+ "张图片不合法");
+                return ResponseEntity.ok(response);
+            }
+        }
+
         String urls = "";
         if (files !=null && files.size()>0){
-            for (int i = 0; i < files.size(); i++) {
-                MultipartFile file = files.get(i);
-                boolean b = imgCheck(file);
-                if (!b){
-                    HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" +(i+1)+ "张图片不合法");
-                    return ResponseEntity.ok(response);
-                }
-
+            for (MultipartFile file : files) {
                 //文件后缀
                 String fileSuffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                 //rootPath为linux环境下的绝对路径+根据userId生产的文件夹
