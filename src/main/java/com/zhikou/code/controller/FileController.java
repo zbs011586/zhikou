@@ -101,17 +101,15 @@ public class FileController extends ApiBaseAction {
         MultiValueMap<String,Object> map = new LinkedMultiValueMap();
         /*RestTemplate中的file属性必须是FileSystemResource  不能是MultipartFile
         * MultipartFile 直接转 fileSystemResource 是不行的
-        * FileSystemResource 需要根据文件路径 来构造
-        * multipartFile 没有路径属性
-        * 需要用java临时文件路径
-        * System.getProperty("java.io.tmpdir") 返回的是临时目录的路径
-        * 临时文件在win和linux中都会自动删除*/
+        * 需要转为本地临时file文件*/
         File tempFilePath = multipartFileToFile(file);
         FileSystemResource resource = new FileSystemResource(tempFilePath);//把临时文件变成filesystemresource
         map.add("media",resource);
         HttpEntity entity = new HttpEntity(map, httpHeaders);
         ResponseEntity<String> responseEntity = template.postForEntity("https://api.weixin.qq.com/wxa/img_sec_check?access_token=" + accessToken, entity, String.class);
         JSONObject jsonObject = JSONObject.parseObject(responseEntity.getBody());
+        /*删除本地临时文件*/
+        delteTempFile(tempFilePath);
         if (jsonObject.getIntValue("errcode") == 0){
             return true;
         }else {
@@ -121,9 +119,6 @@ public class FileController extends ApiBaseAction {
 
     /**
      * MultipartFile 转 File
-     *
-     * @param file
-     * @throws Exception
      */
     public static File multipartFileToFile(MultipartFile file) throws Exception {
 
@@ -140,7 +135,7 @@ public class FileController extends ApiBaseAction {
         return toFile;
     }
 
-    //获取流文件
+    /*获取流文件*/
     private static void inputStreamToFile(InputStream ins, File file) {
         try {
             OutputStream os = new FileOutputStream(file);
@@ -158,7 +153,6 @@ public class FileController extends ApiBaseAction {
 
     /**
      * 删除本地临时文件
-     * @param file
      */
     public static void delteTempFile(File file) {
         if (file != null) {
