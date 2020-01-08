@@ -20,10 +20,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/file")
@@ -33,9 +31,19 @@ public class FileController extends ApiBaseAction {
     public ResponseEntity fileUpload(HttpServletRequest request) throws Exception {
         MultipartHttpServletRequest req = (MultipartHttpServletRequest) request;
         List<MultipartFile> files = req.getFiles("file");
+        /*先进行图片鉴黄*/
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            boolean b = imgCheck(file);
+            if (!b){
+                HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" +(i+1)+ "张图片不合法");
+                return ResponseEntity.ok(response);
+            }
+        }
+        List<MultipartFile> multipartFiles = req.getFiles("file");
         String urls = "";
-        if (files !=null && files.size()>0){
-            for (MultipartFile file : files) {
+        if (files !=null && multipartFiles.size()>0){
+            for (MultipartFile file : multipartFiles) {
                 //文件后缀
                 String fileSuffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                 //rootPath为linux环境下的绝对路径+根据userId生产的文件夹
@@ -59,15 +67,6 @@ public class FileController extends ApiBaseAction {
                 //String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
                 String url = "https://www.zhiko.store/api/image/"+getUserId()+"/"+newFileName;
                 urls += url +",";
-            }
-            /*先进行图片鉴黄*/
-            for (int i = 0; i < files.size(); i++) {
-                MultipartFile file = files.get(i);
-                boolean b = imgCheck(file);
-                if (!b){
-                    HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" +(i+1)+ "张图片不合法");
-                    return ResponseEntity.ok(response);
-                }
             }
 
             HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls.substring(0,urls.length() - 1));
