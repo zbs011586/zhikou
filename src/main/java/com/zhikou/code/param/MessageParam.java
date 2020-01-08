@@ -27,7 +27,7 @@ public class MessageParam {
 
     private String classify;//分类
 
-    private int rebate;
+    private double rebate;
 
     private String filePath;
 
@@ -57,4 +57,17 @@ public class MessageParam {
 
     private int myUserId;
 
+    private String msgType;
+
+    private double fullAmount;
+
+    private double lessAmount;
+
+    private String buyWares;
+
+    private double buyAmount;
+
+    private String giftWares;
+
+    private double giftAmount;
 }

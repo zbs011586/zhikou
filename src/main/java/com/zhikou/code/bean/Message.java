@@ -53,11 +53,28 @@ public class Message {
     @Transient
     private double distance;
 
-    private Integer rebate;//折扣大小
+    private Double rebate;//折扣大小
 
     private String classify;//分类
 
     private String filePath;//上传文件路径
+
+    private String msgType;
+
+    private Double fullAmount;
+
+    private Double lessAmount;
+
+    private String buyWares;
+
+    private Double buyAmount;
+
+    private String giftWares;
+
+    private Double giftAmount;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date endTime;
 
     @Transient
     private String[] filePaths;

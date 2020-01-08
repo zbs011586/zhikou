@@ -312,8 +312,9 @@ public class MessageService {
             message.setClassify(param.getClassify());
             message.setLon(param.getLon());
             message.setLat(param.getLat());
+            message.setRebate(100d);
             message.setShopStatus(1);
-
+            message.setMsgType("gr");
         } else {
             //从shop表中获取当前商家信息的adcode
             Shop shop = new Shop();
@@ -330,10 +331,24 @@ public class MessageService {
             message.setUserName(one.getShopName());
             message.setShopStatus(0);
             message.setAvatar(one.getShopPhoto());
-
+            String msgType = param.getMsgType();
+            message.setMsgType(msgType);
+            if (msgType.equals("dz")){
+                message.setRebate(param.getRebate());
+            }else if (msgType.equals("mj")){
+                message.setRebate((param.getFullAmount()-param.getLessAmount())/param.getFullAmount()*100);
+                message.setFullAmount(param.getFullAmount());
+                message.setLessAmount(param.getLessAmount());
+            }else if (msgType.equals("mz")){
+                message.setRebate(param.getBuyAmount()/(param.getBuyAmount()+param.getGiftAmount())*100);
+                message.setBuyWares(param.getBuyWares());
+                message.setBuyAmount(param.getBuyAmount());
+                message.setGiftWares(param.getGiftWares());
+                message.setGiftAmount(param.getGiftAmount());
+            }
         }
-        message.setRebate(param.getRebate());
         message.setStartTime(param.getStartTime());
+        message.setEndTime(param.getEndTime());
         message.setFilePath(param.getFilePath());
         message.setCreateTime(new Date());
         messageDao.insert(message);
