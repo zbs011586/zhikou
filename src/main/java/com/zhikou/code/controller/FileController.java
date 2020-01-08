@@ -40,10 +40,9 @@ public class FileController extends ApiBaseAction {
                 return ResponseEntity.ok(response);
             }
         }
-        List<MultipartFile> multipartFiles = req.getFiles("file");
         String urls = "";
-        if (files !=null && multipartFiles.size()>0){
-            for (MultipartFile file : multipartFiles) {
+        if (files !=null && files.size()>0){
+            for (MultipartFile file : files) {
                 //文件后缀
                 String fileSuffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                 //rootPath为linux环境下的绝对路径+根据userId生产的文件夹
@@ -100,9 +99,6 @@ public class FileController extends ApiBaseAction {
 
         /*一个键对应多个值 表单提交*/
         MultiValueMap<String,Object> map = new LinkedMultiValueMap();
-        String tempFilePath = System.getProperty("java.io.tmpdir") + file.getOriginalFilename();
-        File tempFile = new File(tempFilePath);
-        file.transferTo(tempFile);//生成临时文件
         /*RestTemplate中的file属性必须是FileSystemResource  不能是MultipartFile
         * MultipartFile 直接转 fileSystemResource 是不行的
         * FileSystemResource 需要根据文件路径 来构造
@@ -110,6 +106,7 @@ public class FileController extends ApiBaseAction {
         * 需要用java临时文件路径
         * System.getProperty("java.io.tmpdir") 返回的是临时目录的路径
         * 临时文件在win和linux中都会自动删除*/
+        File tempFilePath = multipartFileToFile(file);
         FileSystemResource resource = new FileSystemResource(tempFilePath);//把临时文件变成filesystemresource
         map.add("media",resource);
         HttpEntity entity = new HttpEntity(map, httpHeaders);
@@ -119,6 +116,54 @@ public class FileController extends ApiBaseAction {
             return true;
         }else {
             return false;
+        }
+    }
+
+    /**
+     * MultipartFile 转 File
+     *
+     * @param file
+     * @throws Exception
+     */
+    public static File multipartFileToFile(MultipartFile file) throws Exception {
+
+        File toFile = null;
+        if (file.equals("") || file.getSize() <= 0) {
+            file = null;
+        } else {
+            InputStream ins = null;
+            ins = file.getInputStream();
+            toFile = new File(file.getOriginalFilename());
+            inputStreamToFile(ins, toFile);
+            ins.close();
+        }
+        return toFile;
+    }
+
+    //获取流文件
+    private static void inputStreamToFile(InputStream ins, File file) {
+        try {
+            OutputStream os = new FileOutputStream(file);
+            int bytesRead = 0;
+            byte[] buffer = new byte[8192];
+            while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
+                os.write(buffer, 0, bytesRead);
+            }
+            os.close();
+            ins.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除本地临时文件
+     * @param file
+     */
+    public static void delteTempFile(File file) {
+        if (file != null) {
+            File del = new File(file.toURI());
+            del.delete();
         }
     }
 }
