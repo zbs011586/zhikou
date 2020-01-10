@@ -3,7 +3,7 @@
 <mapper namespace="com.zhikou.code.dao.ImageDao">
 
     <select id="getImage" resultType="com.zhikou.code.bean.Image">
-       select id,path,status,sort,create_time as createTime,url
+       select id,path,status,sort,create_time as createTime
        from t_image where status=0
        order by sort asc
    </select>
