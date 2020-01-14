@@ -10,10 +10,13 @@ import com.spatial4j.core.shape.Rectangle;
 import com.zhikou.code.bean.*;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
+import com.zhikou.code.controller.FileController;
 import com.zhikou.code.dao.*;
 import com.zhikou.code.param.MessageParam;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -60,7 +63,8 @@ public class MessageService {
     @Autowired
     private QuestionDao questionDao;
 
-
+    @Autowired
+    private FileController fileController;
 
     public HttpResponse questionList(){
         List<Question> questions = questionDao.selectAll();
@@ -109,7 +113,7 @@ public class MessageService {
         PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.latelyMessage(goalUserId);
         List<Message> list = handleMessage(messages, myUserId);
-        return HttpResponse.OK(new PageInfo(list));
+        return HttpResponse.OK(new PageInfo<>(list));
     }
 
     public HttpResponse messageData(int userId, int type, int adcode, String classify, String inputText,
@@ -143,7 +147,7 @@ public class MessageService {
                     message.setDistance(distance);
                 }
             }
-            return HttpResponse.OK(new PageInfo(list));
+            return HttpResponse.OK(new PageInfo<>(list));
         } else {
             //查询商家
             List<Shop> shops = shopDao.shopData(adcode, classify, inputText, minLon, maxLon, minLat, maxLat);
@@ -156,7 +160,7 @@ public class MessageService {
                     shop.setDistance(distance);
                 }
             }
-            return HttpResponse.OK(new PageInfo(shops));
+            return HttpResponse.OK(new PageInfo<>(shops));
         }
     }
 
@@ -173,13 +177,13 @@ public class MessageService {
         PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.warnInfo(warnTime, userId);
         List<Message> list = handleMessage(messages, userId);
-        return HttpResponse.OK(new PageInfo(list));
+        return HttpResponse.OK(new PageInfo<>(list));
     }
 
     public HttpResponse myWarnTime(int userId, Date startTime, Date endTime) {
         List<Date> dates = userWarnDao.myWarn(userId, startTime, endTime);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        List<String> warnTimes = new ArrayList();
+        List<String> warnTimes = new ArrayList<>();
         for (Date date : dates) {
             String warnTime = format.format(date);
             warnTimes.add(warnTime);
@@ -191,7 +195,7 @@ public class MessageService {
         PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.myWarnMessage(userId);
         List<Message> myLikes = handleMessage(messages, userId);
-        return HttpResponse.OK(new PageInfo(myLikes));
+        return HttpResponse.OK(new PageInfo<>(myLikes));
     }
 
     public HttpResponse saveWarn(int userId, int messageId, int type) {
@@ -219,14 +223,14 @@ public class MessageService {
         PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.myScanMessage(userId);
         List<Message> myLikes = handleMessage(messages, userId);
-        return HttpResponse.OK(new PageInfo(myLikes));
+        return HttpResponse.OK(new PageInfo<>(myLikes));
     }
 
     public HttpResponse myLike(int userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Message> messages = messageDao.myLikeMessage(userId);
         List<Message> myLikes = handleMessage(messages, userId);
-        return HttpResponse.OK(new PageInfo(myLikes));
+        return HttpResponse.OK(new PageInfo<>(myLikes));
     }
 
     public HttpResponse likeUser(int messageId) {
@@ -241,11 +245,15 @@ public class MessageService {
         List<UserComment> comments = userCommentDao.commentUser(messageId);
         //监控此接口入库 用户浏览记录
         saveUserScan(userId, messageId);
-        return HttpResponse.OK(new PageInfo(comments));
+        return HttpResponse.OK(new PageInfo<>(comments));
 
     }
 
     public HttpResponse saveComment(int messageId, int userId, String content) {
+        boolean b = contentCheck(content);
+        if (!b){
+            return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"评论内容不合法");
+        }
         UserComment userComment = new UserComment();
         userComment.setMessageId(messageId);
         userComment.setContent(content);
@@ -290,10 +298,18 @@ public class MessageService {
                 message.setDistance(distance);
             }
         }
-        return HttpResponse.OK(new PageInfo(list));
+        return HttpResponse.OK(new PageInfo<>(list));
     }
 
     public HttpResponse createMessage(MessageParam param, Integer userId) {
+        boolean titleB = contentCheck(param.getTitle());
+        if (!titleB){
+            return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"标题内容不合法");
+        }
+        boolean contentB = contentCheck(param.getContent());
+        if (!contentB){
+            return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"正文内容不合法");
+        }
         Message message = new Message();
         message.setUserId(userId);
         message.setTitle(param.getTitle());
@@ -411,7 +427,7 @@ public class MessageService {
      * @date 2019/9/20 18:27
      */
     private Map<String, Object> handleStatus(int messageId, int userId) {
-        HashMap map = new HashMap();
+        HashMap<String, Object> map = new HashMap<String, Object>();
         //处理点赞状态
         UserLike userLike = new UserLike();
         userLike.setMessageId(messageId);
@@ -454,8 +470,8 @@ public class MessageService {
         return HttpResponse.OK(hotSearch);
     }
 
-    private Map getUserNameAndAvatar(int userId) {
-        HashMap map = new HashMap();
+    private Map<String, String> getUserNameAndAvatar(int userId) {
+        HashMap<String, String> map = new HashMap<>();
         Shop param = new Shop();
         param.setUserId(userId);
         Shop shop = shopDao.selectOne(param);
@@ -487,5 +503,21 @@ public class MessageService {
         JSONObject addressComponent = regeocode.getJSONObject("addressComponent");
         String adcode = addressComponent.getString("adcode");
         return Integer.valueOf(adcode);
+    }
+
+    public boolean contentCheck(String content){
+        String token = fileController.getAccessToken();
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        JSONObject object = new JSONObject();
+        object.put("content",content);
+        HttpEntity entity = new HttpEntity(object, headers);
+        ResponseEntity<String> responseEntity = template.postForEntity("https://api.weixin.qq.com/wxa/msg_sec_check?access_token=" + token, entity, String.class);
+        JSONObject jsonObject = JSONObject.parseObject(responseEntity.getBody());
+        if (jsonObject.getIntValue("errcode") == 0){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

@@ -8,6 +8,7 @@ public final class Constants {
         int TOKEN_ERROR = 1002;
         int REQUEST_ERROR = 1003;
         int IMG_ERROR = 1004;
+        int CONTENT_ERROR = 1005;
     }
 
 }

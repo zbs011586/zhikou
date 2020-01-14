@@ -29,6 +29,10 @@ public class AccountService {
     @Autowired
     private TokenDao tokenDao;
 
+    @Autowired
+    private MessageService messageService;
+
+
     public HttpResponse  getUserInfo(int userId){
         User user = new User();
         user.setUserId(userId);
@@ -49,6 +53,14 @@ public class AccountService {
     }
 
     public HttpResponse shopRegistry(int userId,Shop param){
+        boolean shopNameB = messageService.contentCheck(param.getShopName());
+        if (!shopNameB){
+            return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"店铺名称不合法");
+        }
+        boolean b = messageService.contentCheck(param.getDescription());
+        if (!b){
+            return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"店铺简介内容不合法");
+        }
         //判断当前用户是否已经是商家
         Shop shop = new Shop();
         shop.setUserId(userId);

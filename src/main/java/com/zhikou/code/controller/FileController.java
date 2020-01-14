@@ -76,7 +76,7 @@ public class FileController extends ApiBaseAction {
     }
 
     /*获取微信小程序的AccessToken*/
-    private String getAccessToken(){
+    public String getAccessToken(){
         Map map = new HashMap();
         map.put("grant_type","client_credential");
         map.put("appid","wxce9b581e958ee216");
