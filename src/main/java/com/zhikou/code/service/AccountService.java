@@ -52,7 +52,8 @@ public class AccountService {
         return HttpResponse.OK(map);
     }
 
-    public HttpResponse shopRegistry(int userId,Shop param){
+    public HttpResponse
+    shopRegistry(int userId,Shop param){
         boolean shopNameB = messageService.contentCheck(param.getShopName());
         if (!shopNameB){
             return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"店铺名称不合法");

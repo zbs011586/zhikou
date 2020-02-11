@@ -10,7 +10,6 @@ import com.zhikou.code.commons.ApiBaseAction;
 import com.zhikou.code.commons.Constants;
 import com.zhikou.code.commons.HttpResponse;
 import com.zhikou.code.commons.IgnoreAuth;
-import com.zhikou.code.dao.ShopDao;
 import com.zhikou.code.param.UserParam;
 import com.zhikou.code.service.AccountService;
 import com.zhikou.code.service.TokenService;
@@ -42,8 +41,6 @@ public class AccountController extends ApiBaseAction {
     private TokenService tokenService;
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private ShopDao shopDao;
 
     /**
      * @description 微信登录 参数为code和一个FullUserInfo对象
