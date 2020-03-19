@@ -62,6 +62,10 @@ public class AccountService {
         if (!b){
             return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"店铺简介内容不合法");
         }
+        boolean check = messageService.contentCheck(param.getAddress());
+        if (!check){
+            return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"店铺地址内容不合法");
+        }
         //判断当前用户是否已经是商家
         Shop shop = new Shop();
         shop.setUserId(userId);
