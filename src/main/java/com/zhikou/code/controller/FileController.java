@@ -34,28 +34,29 @@ public class FileController extends ApiBaseAction {
         for (int i = 0; i < files.size(); i++) {
             MultipartFile file = files.get(i);
             boolean b = imgCheck(file);
-            if (!b){
-                HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" +(i+1)+ "张图片不合法");
+            if (!b) {
+                HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" + (i + 1) + "张图片不合法");
                 return ResponseEntity.ok(response);
             }
         }
         String urls = "";
-        if (files !=null && files.size()>0){
-            for (MultipartFile file : files) {
+        if (files != null && files.size() > 0) {
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
                 //文件后缀
                 String fileSuffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
                 //rootPath为linux环境下的绝对路径+根据userId生产的文件夹
-                String rootPath = "/root/zhiko/zhikou/image"+"/"+getUserId();
+                String rootPath = "/root/zhiko/zhikou/image" + "/" + getUserId();
                 //用时间戳重新命名文件
-                String newFileName = new Date().getTime()+"."+fileSuffix;
-                String filePath = rootPath+"/"+newFileName;
+                String newFileName = new Date().getTime() + "." + fileSuffix;
+                String filePath = rootPath + "/" + newFileName;
                 File fileDir = new File(rootPath);
                 File uploadFile = new File(filePath);
                 try {
-                    if (!fileDir.exists()){
+                    if (!fileDir.exists()) {
                         fileDir.mkdirs();
                     }
-                    if (!uploadFile.exists()){
+                    if (!uploadFile.exists()) {
                         file.transferTo(uploadFile);
                     }
                 } catch (IOException e) {
@@ -63,24 +64,29 @@ public class FileController extends ApiBaseAction {
                 }
                 //生成图片的静态资源访问路径
                 //String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/image/"+getUserId()+"/"+newFileName;
-                String url = "https://www.zhiko.store/api/image/"+getUserId()+"/"+newFileName;
-                urls += url +",";
+                String url = "https://www.zhiko.store/api/image/" + getUserId() + "/" + newFileName;
+                boolean b = imgCheckAsync(url);
+                if (!b) {
+                    HttpResponse response = new HttpResponse(Constants.ErrorCode.IMG_ERROR, "第" + (i + 1) + "张图片不合法");
+                    return ResponseEntity.ok(response);
+                }
+                urls += url + ",";
             }
 
-            HttpResponse response = new HttpResponse(Constants.ErrorCode.OK,urls.substring(0,urls.length() - 1));
+            HttpResponse response = new HttpResponse(Constants.ErrorCode.OK, urls.substring(0, urls.length() - 1));
             return ResponseEntity.ok(response);
-        }else {
-            HttpResponse response = new HttpResponse(Constants.ErrorCode.REQUEST_ERROR,"文件为空,请重新上传");
+        } else {
+            HttpResponse response = new HttpResponse(Constants.ErrorCode.REQUEST_ERROR, "文件为空,请重新上传");
             return ResponseEntity.ok(response);
         }
     }
 
     /*获取微信小程序的AccessToken*/
-    public String getAccessToken(){
+    public String getAccessToken() {
         Map map = new HashMap();
-        map.put("grant_type","client_credential");
-        map.put("appid","wxce9b581e958ee216");
-        map.put("secret","ba70e6c8428b2489b7b722fb6b8f845b");
+        map.put("grant_type", "client_credential");
+        map.put("appid", "wxce9b581e958ee216");
+        map.put("secret", "ba70e6c8428b2489b7b722fb6b8f845b");
         RestTemplate template = new RestTemplate();
         ResponseEntity<String> entity = template.getForEntity("https://api.weixin.qq.com/cgi-bin/token?grant_type={grant_type}&appid={appid}&secret={secret}", String.class, map);
         JSONObject object = JSONObject.parseObject(entity.getBody());
@@ -93,25 +99,42 @@ public class FileController extends ApiBaseAction {
         RestTemplate template = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         /*设置请求头*/
-        httpHeaders.add("Accept",MediaType.APPLICATION_JSON.toString());
+        httpHeaders.add("Accept", MediaType.APPLICATION_JSON.toString());
         httpHeaders.setContentType(MediaType.parseMediaType("multipart/form-data;charset=UTF-8"));
 
         /*一个键对应多个值 表单提交*/
-        MultiValueMap<String,Object> map = new LinkedMultiValueMap();
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap();
         /*RestTemplate中的file属性必须是FileSystemResource  不能是MultipartFile
-        * MultipartFile 直接转 fileSystemResource 是不行的
-        * 需要转为本地临时file文件*/
+         * MultipartFile 直接转 fileSystemResource 是不行的
+         * 需要转为本地临时file文件*/
         File tempFilePath = multipartFileToFile(file);
         FileSystemResource resource = new FileSystemResource(tempFilePath);//把临时文件变成filesystemresource
-        map.add("media",resource);
+        map.add("media", resource);
         HttpEntity entity = new HttpEntity(map, httpHeaders);
         ResponseEntity<String> responseEntity = template.postForEntity("https://api.weixin.qq.com/wxa/img_sec_check?access_token=" + accessToken, entity, String.class);
         JSONObject jsonObject = JSONObject.parseObject(responseEntity.getBody());
         /*删除本地临时文件*/
         delteTempFile(tempFilePath);
-        if (jsonObject.getIntValue("errcode") == 0){
+        if (jsonObject.getIntValue("errcode") == 0) {
             return true;
-        }else {
+        } else {
+            return false;
+        }
+    }
+
+    private boolean imgCheckAsync(String url) {
+        String token = getAccessToken();
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        JSONObject object = new JSONObject();
+        object.put("media_url", url);
+        object.put("media_type", 2);
+        HttpEntity entity = new HttpEntity(object, headers);
+        ResponseEntity<String> responseEntity = template.postForEntity("https://api.weixin.qq.com/wxa/media_check_async?access_token=" + token, entity, String.class);
+        JSONObject jsonObject = JSONObject.parseObject(responseEntity.getBody());
+        if (jsonObject.getIntValue("errcode") == 0) {
+            return true;
+        } else {
             return false;
         }
     }
