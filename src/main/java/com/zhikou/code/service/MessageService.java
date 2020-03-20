@@ -122,7 +122,6 @@ public class MessageService {
     public HttpResponse messageData(int userId, int type, int adcode, String classify, String inputText,
                                     int rebateOrder, double lon, double lat, int radius, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        boolean b = messageService.contentCheck(inputText);
         double minLon = 0d;
         double maxLon = 0d;
         double minLat = 0d;
