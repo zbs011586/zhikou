@@ -123,9 +123,6 @@ public class MessageService {
                                     int rebateOrder, double lon, double lat, int radius, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         boolean b = messageService.contentCheck(inputText);
-        if (!b){
-            return HttpResponse.ERROR(Constants.ErrorCode.CONTENT_ERROR,"输入搜索内容不合法");
-        }
         double minLon = 0d;
         double maxLon = 0d;
         double minLat = 0d;
