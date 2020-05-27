@@ -31,6 +31,8 @@ public class MessageParam {
 
     private String filePath;
 
+    private String file_path;
+
     private Date startTime;
 
     private int pageNum;

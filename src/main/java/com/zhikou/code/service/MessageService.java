@@ -14,6 +14,7 @@ import com.zhikou.code.controller.FileController;
 import com.zhikou.code.dao.*;
 import com.zhikou.code.param.MessageParam;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -368,7 +369,11 @@ public class MessageService {
         }
         message.setStartTime(param.getStartTime());
         message.setEndTime(param.getEndTime());
-        message.setFilePath(param.getFilePath());
+        if (StringUtils.isEmpty(param.getFile_path())){
+            message.setFilePath(param.getFilePath());
+        }else {
+            message.setFilePath(param.getFile_path());
+        }
         message.setCreateTime(new Date());
         messageDao.insert(message);
 
